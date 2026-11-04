@@ -1,0 +1,634 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>กินดี มีร้านอร่อย | นางรอง</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --green: #365b3d;
+  --dark-green: #25452e;
+  --cream: #fbf8ee;
+  --light-green: #e8eddc;
+}
+
+body {
+  font-family: Tahoma, Arial, sans-serif;
+  background: var(--cream);
+  color: #354036;
+  line-height: 1.7;
+}
+
+/* ส่วนหัวเว็บไซต์ */
+header {
+  background: var(--green);
+  color: white;
+  padding: 15px 4%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.college {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.college-logo {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #e9d9a4;
+  flex-shrink: 0;
+}
+
+.college-name strong {
+  display: block;
+  font-size: 15px;
+}
+
+.college-name small {
+  font-size: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 16px;
+  border-left: 1px solid #aeb9a8;
+}
+
+.brand-icon {
+  font-size: 34px;
+}
+
+.brand h1 {
+  font-size: 23px;
+  line-height: 1.4;
+}
+
+.brand p {
+  font-size: 12px;
+  color: #e6eadf;
+}
+
+nav {
+  margin-left: auto;
+  display: flex;
+  gap: 17px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #f4dca4;
+}
+
+/* แบนเนอร์ */
+.hero {
+  padding: 42px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #e5ebd7, #f8f0d9);
+}
+
+.hero .eyebrow {
+  color: #82603e;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.hero h2 {
+  font-size: clamp(27px, 5vw, 42px);
+  color: var(--dark-green);
+  margin: 5px 0;
+}
+
+.hero p {
+  margin-bottom: 20px;
+}
+
+.search-box {
+  max-width: 620px;
+  margin: auto;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 14px 20px;
+  border: 1px solid #a9b9a1;
+  border-radius: 30px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: var(--green);
+}
+
+/* รายการอาหาร */
+main {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 22px 45px;
+}
+
+.section-title {
+  color: var(--dark-green);
+  font-size: 27px;
+  margin-bottom: 15px;
+}
+
+.filters {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.filters button {
+  background: white;
+  color: var(--dark-green);
+  border: 1px solid #8ca18a;
+  padding: 9px 19px;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filters button.active,
+.filters button:hover {
+  background: var(--green);
+  color: white;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e0ddcf;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 18px #263b251a;
+}
+
+/* รูปภาพ */
+.food-photo {
+  height: 210px;
+  background: #e8eddc;
+  overflow: hidden;
+}
+
+.food-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fallback {
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--dark-green);
+  background: var(--light-green);
+}
+
+.fallback .emoji {
+  font-size: 65px;
+}
+
+.fallback span {
+  font-weight: bold;
+}
+
+.info {
+  padding: 15px;
+}
+
+.category {
+  display: inline-block;
+  background: #e3ecd8;
+  color: #365b3d;
+  border-radius: 18px;
+  padding: 3px 11px;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
+.category.noodle {
+  background: #dceaf5;
+  color: #315d7b;
+}
+
+.category.thai {
+  background: #f4e4c7;
+  color: #795324;
+}
+
+.category.drink {
+  background: #f3dfe4;
+  color: #854556;
+}
+
+.info h3 {
+  font-size: 19px;
+  color: var(--dark-green);
+  margin-bottom: 5px;
+}
+
+.info p {
+  font-size: 14px;
+  min-height: 48px;
+  margin-bottom: 12px;
+}
+
+.location {
+  border-top: 1px solid #eeeadd;
+  padding-top: 9px;
+  color: #697467;
+  font-size: 13px;
+}
+
+.no-results {
+  display: none;
+  text-align: center;
+  padding: 30px;
+}
+
+/* เกี่ยวกับเว็บไซต์ */
+.about {
+  max-width: 1156px;
+  margin: 0 auto 25px;
+  padding: 22px;
+  background: var(--light-green);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.about h2 {
+  color: var(--dark-green);
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+
+.about p {
+  font-size: 14px;
+}
+
+.about-details {
+  border-left: 2px solid #a0b198;
+  padding-left: 20px;
+}
+
+footer {
+  text-align: center;
+  background: var(--green);
+  color: white;
+  padding: 23px 15px;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  nav {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .about-details {
+    border-left: none;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .brand {
+    padding-left: 0;
+    border-left: none;
+  }
+
+  .college-logo {
+    width: 58px;
+    height: 58px;
+  }
+
+  .food-photo {
+    height: 220px;
+  }
+
+  .section-title {
+    font-size: 23px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ส่วนหัวและตราวิทยาลัย -->
+<header>
+  <div class="college">
+    <img
+      class="college-logo"
+      src="images/college-logo.jpg"
+      alt="ตราวิทยาลัยเทคนิคนางรอง"
+    >
+
+    <div class="college-name">
+      <strong>วิทยาลัยเทคนิคนางรอง</strong>
+      <small>NANGRONG TECHNICAL COLLEGE</small>
+    </div>
+  </div>
+
+  <div class="brand">
+    <div class="brand-icon">🍴</div>
+    <div>
+      <h1>กินดี มีร้านอร่อย</h1>
+      <p>แนะนำร้านอาหารในอำเภอนางรอง</p>
+    </div>
+  </div>
+
+  <nav>
+    <a href="#home">หน้าแรก</a>
+    <a href="#restaurants">ร้านอาหาร</a>
+    <a href="#about">เกี่ยวกับเรา</a>
+  </nav>
+</header>
+
+<!-- แบนเนอร์หน้าแรก -->
+<section class="hero" id="home">
+  <div class="eyebrow">ยินดีต้อนรับสู่เมืองนางรอง</div>
+  <h2>ของกินบ้านเฮา อำเภอนางรอง</h2>
+  <p>รวมเมนูอาหารบ้าน ๆ อร่อยง่าย ราคาเป็นกันเอง</p>
+
+  <div class="search-box">
+    <input
+      type="search"
+      id="search"
+      placeholder="🔍 ค้นหาร้านอาหารหรือชื่อเมนู..."
+      aria-label="ค้นหาร้านอาหาร"
+    >
+  </div>
+</section>
+
+<!-- การ์ดอาหาร -->
+<main id="restaurants">
+  <h2 class="section-title">🍚 เมนูอาหารแนะนำ</h2>
+
+  <div class="filters">
+    <button class="active" data-filter="all">ทั้งหมด</button>
+    <button data-filter="isan">อาหารอีสาน</button>
+    <button data-filter="noodle">ก๋วยเตี๋ยว</button>
+    <button data-filter="thai">อาหารตามสั่ง</button>
+    <button data-filter="drink">เครื่องดื่ม</button>
+  </div>
+
+  <div class="cards">
+
+    <!-- เมนู 1 -->
+    <article class="card" data-category="isan">
+      <div class="food-photo">
+        <img
+          src="https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=900&q=85"
+          alt="ส้มตำ"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="fallback">
+          <div class="emoji">🥗</div>
+          <span>เมนูส้มตำ</span>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category">อาหารอีสาน</span>
+        <h3>ร้านส้มตำ</h3>
+        <p>ส้มตำไทย ส้มตำปลาร้า ลาบ น้ำตก และข้าวเหนียว</p>
+        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
+      </div>
+    </article>
+
+    <!-- เมนู 2 -->
+    <article class="card" data-category="isan">
+      <div class="food-photo">
+        <img
+          src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=900&q=85"
+          alt="ไก่ย่าง"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="fallback">
+          <div class="emoji">🍗</div>
+          <span>เมนูไก่ย่าง</span>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category">อาหารอีสาน</span>
+        <h3>ร้านไก่ย่าง</h3>
+        <p>ไก่ย่างหอม ๆ กินคู่ข้าวเหนียวและน้ำจิ้มแจ่ว</p>
+        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
+      </div>
+    </article>
+
+    <!-- เมนู 3 -->
+    <article class="card" data-category="noodle">
+      <div class="food-photo">
+        <img
+          src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=85"
+          alt="ก๋วยเตี๋ยวในชาม"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="fallback">
+          <div class="emoji">🍜</div>
+          <span>เมนูก๋วยเตี๋ยว</span>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category noodle">ก๋วยเตี๋ยว</span>
+        <h3>ร้านก๋วยเตี๋ยว</h3>
+        <p>ก๋วยเตี๋ยวน้ำใส น้ำตก ลูกชิ้น และหมูชิ้น</p>
+        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
+      </div>
+    </article>
+
+    <!-- เมนู 4 -->
+    <article class="card" data-category="thai">
+      <div class="food-photo">
+        <img
+          src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=900&q=85"
+          alt="ข้าวกะเพรา"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="fallback">
+          <div class="emoji">🍳</div>
+          <span>เมนูข้าวกะเพรา</span>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category thai">อาหารตามสั่ง</span>
+        <h3>ร้านข้าวตามสั่ง</h3>
+        <p>ข้าวกะเพรา ข้าวผัด ไข่เจียว และอาหารจานเดียว</p>
+        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
+      </div>
+    </article>
+
+    <!-- เมนู 5 -->
+    <article class="card" data-category="thai">
+      <div class="food-photo">
+        <img
+          src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=900&q=85"
+          alt="แกงไทย"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="fallback">
+          <div class="emoji">🍛</div>
+          <span>เมนูข้าวแกง</span>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category thai">อาหารไทย</span>
+        <h3>ร้านข้าวแกง</h3>
+        <p>แกงต่าง ๆ กับข้าวสวยและกับข้าวแบบบ้าน ๆ</p>
+        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
+      </div>
+    </article>
+
+    <!-- เมนู 6 -->
+    <article class="card" data-category="drink">
+      <div class="food-photo">
+        <img
+          src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=85"
+          alt="กาแฟเย็น"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="fallback">
+          <div class="emoji">🧋</div>
+          <span>เมนูเครื่องดื่มเย็น</span>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category drink">เครื่องดื่ม</span>
+        <h3>ร้านกาแฟและน้ำชง</h3>
+        <p>กาแฟเย็น ชาเย็น โกโก้ และเครื่องดื่มเย็น ๆ</p>
+        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="no-results" id="noResults">
+    ไม่พบเมนูที่ค้นหา ลองค้นหาคำอื่นนะ 😊
+  </div>
+</main>
+
+<!-- ข้อมูลผู้จัดทำ -->
+<section class="about" id="about">
+  <div>
+    <h2>🌿 เกี่ยวกับเว็บไซต์</h2>
+    <p>เว็บไซต์แนะนำอาหารในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+    <p>จัดทำขึ้นเพื่อการเรียนรู้การพัฒนาเว็บไซต์ทางธุรกิจ</p>
+  </div>
+
+  <div class="about-details">
+    <p>ผู้จัดทำ: ....................................</p>
+    <p>สาขาเทคโนโลยีธุรกิจดิจิทัล ระดับ ปวส.</p>
+    <p>วิทยาลัยเทคนิคนางรอง</p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 กินดี มีร้านอร่อย</p>
+  <p>เว็บไซต์เพื่อการศึกษา | อำเภอนางรอง จังหวัดบุรีรัมย์</p>
+</footer>
+
+<script>
+const search = document.getElementById("search");
+const buttons = document.querySelectorAll(".filters button");
+const cards = document.querySelectorAll(".card");
+const noResults = document.getElementById("noResults");
+
+let currentFilter = "all";
+
+function filterCards() {
+  const keyword = search.value.trim().toLowerCase();
+  let count = 0;
+
+  cards.forEach(card => {
+    const categoryMatch =
+      currentFilter === "all" ||
+      card.dataset.category === currentFilter;
+
+    const textMatch =
+      card.innerText.toLowerCase().includes(keyword);
+
+    const show = categoryMatch && textMatch;
+
+    card.style.display = show ? "" : "none";
+
+    if (show) count++;
+  });
+
+  noResults.style.display = count === 0 ? "block" : "none";
+}
+
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+    currentFilter = button.dataset.filter;
+
+    buttons.forEach(item => {
+      item.classList.toggle("active", item === button);
+    });
+
+    filterCards();
+  });
+});
+
+search.addEventListener("input", filterCards);
+</script>
+
+</body>
+</html>
