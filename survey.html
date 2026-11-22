@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบประเมินความพึงพอใจ & สถิติวิจัย (บทที่ 4) | นางรอง ลองชิม</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js for Senior Project Evaluation Dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#FCFAF7] text-slate-800 antialiased selection:bg-orange-500 selection:text-white flex flex-col min-h-screen">
+
+  <!-- ==========================================
+       Top Navigation Bar (Navbar)
+       ========================================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 md:w-6 md:h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg md:text-xl text-slate-900 tracking-tight font-heading">นางรอง ลองชิม</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">อ.นางรอง บุรีรัมย์</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-normal">ระบบแนะนำร้านอาหารลับ & ของอร่อยท้องถิ่น</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="nav-link hover:text-orange-600 transition">หน้าแรก</a>
+          <a href="restaurants.html" class="nav-link hover:text-orange-600 transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="nav-link hover:text-orange-600 transition">แผนที่ร้านลับ</a>
+          <a href="survey.html" class="nav-link text-orange-600 font-bold hover:text-orange-700 transition flex items-center gap-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+            </span>
+            แบบประเมินวิจัย
+          </a>
+          <a href="suggest.html" class="nav-link hover:text-orange-600 transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="nav-link hover:text-orange-600 transition">ข้อมูลโครงงาน</a>
+        </nav>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <button 
+            onclick="randomizeSecretSpot()" 
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition">
+            <i data-lucide="dices" class="w-4 h-4 text-amber-600"></i>
+            <span>สุ่มร้านกินอะไรดี?</span>
+          </button>
+
+          <button 
+            onclick="openFavoritesView()" 
+            title="ดูร้านโปรดของคุณ"
+            class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-600 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="fav-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       Main Survey & Analytics Content
+       ========================================== -->
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold mb-3">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span>ตอบโจทย์วัตถุประสงค์ข้อ 2.3 & สมมติฐานการวิจัยบทที่ 1</span>
+        </div>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-slate-900 font-heading">
+          แบบประเมินความพึงพอใจของผู้ใช้งาน
+        </h1>
+        <p class="text-xs md:text-sm text-slate-600 mt-2 leading-relaxed">
+          ร่วมทำแบบประเมินความพึงพอใจเพื่อรวบรวมข้อมูลเชิงสถิติ (ค่าเฉลี่ย x̄ และส่วนเบี่ยงเบนมาตรฐาน S.D.) 
+          สำหรับนำไปใช้วิเคราะห์และสรุปผลใน **บทที่ 4 และ บทที่ 5** ของโครงงานวิจัย
+        </p>
+      </div>
+
+      <!-- Quick Jump / Action Tabs -->
+      <div class="flex justify-center gap-3 mb-8 no-print">
+        <a href="#survey-form-container" class="px-5 py-2.5 rounded-xl bg-orange-600 text-white text-xs font-bold hover:bg-orange-700 transition flex items-center gap-2 shadow-sm">
+          <i data-lucide="edit-3" class="w-4 h-4"></i>
+          <span>ทำแบบสอบถาม</span>
+        </a>
+        <a href="#analytics-dashboard" class="px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition flex items-center gap-2">
+          <i data-lucide="bar-chart-3" class="w-4 h-4 text-orange-600"></i>
+          <span>ดูแดชบอร์ดสถิติวิจัย (บทที่ 4)</span>
+        </a>
+      </div>
+
+      <!-- Grid: Left Form / Right Dashboard -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Survey Form (7 cols) -->
+        <div id="survey-form-container" class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 font-heading">แบบสอบถามความพึงพอใจ 5 ด้าน</h3>
+              <p class="text-xs text-slate-500 mt-0.5">เกณฑ์คะแนน: 5 = มากที่สุด, 4 = มาก, 3 = ปานกลาง, 2 = น้อย, 1 = น้อยที่สุด</p>
+            </div>
+            <span class="text-xs bg-orange-100 text-orange-700 font-bold px-2.5 py-1 rounded-lg">10 ข้อ</span>
+          </div>
+
+          <form id="standalone-survey-form">
+            <!-- Questions injected via JS -->
+            <div id="survey-questions-list"></div>
+
+            <!-- Demographics -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 mt-6 mb-6 space-y-3">
+              <h4 class="text-xs font-bold text-slate-800">ข้อมูลผู้ตอบแบบสอบถาม (Demographics):</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <label class="block text-slate-500 mb-1">ชื่อ / นามแฝง:</label>
+                  <input type="text" name="respondent_name" placeholder="เช่น กานต์ หรือ นักท่องเที่ยว" class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500">
+                </div>
+                <div>
+                  <label class="block text-slate-500 mb-1">เพศ:</label>
+                  <select name="respondent_gender" class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500">
+                    <option value="ชาย">ชาย</option>
+                    <option value="หญิง">หญิง</option>
+                    <option value="ไม่ระบุ">ไม่ระบุ</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-500 mb-1">ช่วงอายุ:</label>
+                  <select name="respondent_age" class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500">
+                    <option value="ต่ำกว่า 20 ปี">ต่ำกว่า 20 ปี</option>
+                    <option value="20-29 ปี" selected>20-29 ปี</option>
+                    <option value="30-39 ปี">30-39 ปี</option>
+                    <option value="40-49 ปี">40-49 ปี</option>
+                    <option value="50 ปีขึ้นไป">50 ปีขึ้นไป</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-slate-500 text-xs mb-1">ข้อเสนอแนะเพิ่มเติมเพื่อการพัฒนาระบบ:</label>
+                <textarea name="respondent_comment" rows="2" placeholder="ความคิดเห็น หรือสิ่งที่อยากให้เพิ่มในเว็บไซต์แนะนำร้านอาหารนางรอง..." class="w-full text-xs bg-white px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500"></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-lg shadow-orange-600/25 transition">
+              ส่งผลการประเมินความพึงพอใจ
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Statistical Dashboard (5 cols) -->
+        <div id="analytics-dashboard" class="lg:col-span-5 space-y-6">
+          
+          <!-- Summary Score Header -->
+          <div class="bg-gradient-to-tr from-orange-600 to-amber-600 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+              <span class="text-xs uppercase font-bold tracking-wider text-orange-200">ผลการวิเคราะห์ข้อมูลสถิติ (บทที่ 4)</span>
+              <h3 class="text-xl font-bold font-heading mt-1">สรุปผลระดับความพึงพอใจ</h3>
+              
+              <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/20">
+                <div>
+                  <span class="text-xs text-orange-100 block">ค่าเฉลี่ยรวม (x̄):</span>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span id="page-stat-mean" class="text-3xl font-extrabold">4.82</span>
+                    <span class="text-xs text-orange-200">/ 5.00</span>
+                  </div>
+                </div>
+                <div>
+                  <span class="text-xs text-orange-100 block">ส่วนเบี่ยงเบนมาตรฐาน (S.D.):</span>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span id="page-stat-sd" class="text-3xl font-extrabold">0.38</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs">
+                <span>ระดับความพึงพอใจ: <strong id="page-stat-interp" class="underline decoration-amber-300">มากที่สุด</strong></span>
+                <span>จำนวนกลุ่มตัวอย่าง: <strong id="page-stat-count">30 คน</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart.js Graph -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <h4 class="text-xs font-bold text-slate-800 mb-3 flex items-center justify-between font-heading">
+              <span>กราฟแท่งเปรียบเทียบค่าเฉลี่ย 5 ด้าน</span>
+              <span class="text-[10px] text-slate-400 font-normal">คะแนนเต็ม 5.00</span>
+            </h4>
+            <div class="h-56 relative">
+              <canvas id="standaloneSurveyChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Table of Stats for Chapter 4 -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-xs font-bold text-slate-800 font-heading">ตารางค่าสถิติรายข้อ (สำหรับเล่มบทที่ 4)</h4>
+              <div class="flex gap-1.5 no-print">
+                <button onclick="window.print()" title="พิมพ์ตาราง" class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-[11px] flex items-center gap-1">
+                  <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                  <span>พิมพ์</span>
+                </button>
+                <button onclick="exportCSV()" title="ส่งออกเป็น Excel CSV" class="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition text-[11px] font-semibold flex items-center gap-1">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                  <span>Excel CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto max-h-64 overflow-y-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 text-[11px] text-slate-400 bg-slate-50">
+                    <th class="py-2 px-3">ประเด็นการประเมิน</th>
+                    <th class="py-2 px-3 text-center">x̄</th>
+                    <th class="py-2 px-3 text-center">S.D.</th>
+                    <th class="py-2 px-3 text-center">แปลผล</th>
+                  </tr>
+                </thead>
+                <tbody id="page-survey-stats-table">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Comments -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <h4 class="text-xs font-bold text-slate-800 mb-3 font-heading">ความคิดเห็นและข้อเสนอแนะล่าสุด</h4>
+            <div id="page-recent-comments" class="space-y-2.5 max-h-48 overflow-y-auto">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-base font-heading">นางรอง ลองชิม (Nang Rong Secret Taste)</h3>
+            <p class="text-slate-500 text-[11px]">ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+          <a href="index.html" class="hover:text-white transition">หน้าแรก</a>
+          <a href="restaurants.html" class="hover:text-white transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="hover:text-white transition">แผนที่</a>
+          <a href="survey.html" class="text-orange-400 font-semibold">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="hover:text-white transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="hover:text-white transition">ข้อมูลโครงงาน</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>© 2026 โครงการพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+        <p>พัฒนาขึ้นเพื่อการศึกษาและการวิจัยชุมชน • สนับสนุนการท่องเที่ยว อ.นางรอง</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    let surveyChartInstance = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSurveyQuestions();
+      updateDashboardStats();
+
+      document.getElementById('standalone-survey-form')?.addEventListener('submit', handleSurveySubmit);
+    });
+
+    function renderSurveyQuestions() {
+      const container = document.getElementById('survey-questions-list');
+      if (!container) return;
+
+      container.innerHTML = SURVEY_QUESTIONS.map(group => `
+        <div class="mb-6 p-5 rounded-2xl bg-[#FCFAF7] border border-slate-100">
+          <h4 class="text-sm font-bold text-slate-800 mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+            ${group.category}
+          </h4>
+          <div class="space-y-4">
+            ${group.items.map(item => `
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs py-2 border-b border-slate-100 last:border-none">
+                <span class="text-slate-700 font-medium md:max-w-md">${item.text}</span>
+                <div class="flex items-center gap-3 justify-between md:justify-end">
+                  ${[5, 4, 3, 2, 1].map(score => `
+                    <label class="flex flex-col items-center gap-1 cursor-pointer group">
+                      <input type="radio" name="${item.id}" value="${score}" required class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                      <span class="text-[10px] text-slate-400 group-hover:text-orange-600">${score}</span>
+                    </label>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function calculateStats() {
+      const responses = CommonState.surveys;
+      const n = responses.length;
+      if (n === 0) return null;
+
+      const questionKeys = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+      const questionStats = {};
+
+      questionKeys.forEach(qKey => {
+        const scores = responses.map(r => r.scores[qKey]);
+        const sum = scores.reduce((acc, curr) => acc + curr, 0);
+        const mean = sum / n;
+        const variance = scores.reduce((acc, curr) => acc + Math.pow(curr - mean, 2), 0) / (n > 1 ? n - 1 : 1);
+        const sd = Math.sqrt(variance);
+
+        questionStats[qKey] = {
+          mean: Number(mean.toFixed(2)),
+          sd: Number(sd.toFixed(2)),
+          interpretation: getLikertInterpretation(mean)
+        };
+      });
+
+      const categoryStats = [
+        { name: '1. การออกแบบหน้าจอ (UI)', mean: Number(((questionStats.q1.mean + questionStats.q2.mean) / 2).toFixed(2)) },
+        { name: '2. ความสะดวกในการใช้งาน', mean: Number(((questionStats.q3.mean + questionStats.q4.mean) / 2).toFixed(2)) },
+        { name: '3. คุณภาพของข้อมูลร้าน', mean: Number(((questionStats.q5.mean + questionStats.q6.mean) / 2).toFixed(2)) },
+        { name: '4. ระบบค้นหา & ฟังก์ชัน', mean: Number(((questionStats.q7.mean + questionStats.q8.mean) / 2).toFixed(2)) },
+        { name: '5. ประโยชน์และการประยุกต์ใช้', mean: Number(((questionStats.q9.mean + questionStats.q10.mean) / 2).toFixed(2)) }
+      ];
+
+      const overallSum = Object.values(questionStats).reduce((acc, curr) => acc + curr.mean, 0);
+      const overallMean = Number((overallSum / 10).toFixed(2));
+      const overallSd = Number((Object.values(questionStats).reduce((acc, curr) => acc + curr.sd, 0) / 10).toFixed(2));
+
+      return {
+        sampleSize: n,
+        questionStats,
+        categoryStats,
+        overallMean,
+        overallSd,
+        overallInterpretation: getLikertInterpretation(overallMean)
+      };
+    }
+
+    function getLikertInterpretation(score) {
+      if (score >= 4.50) return 'มากที่สุด (Very High)';
+      if (score >= 3.50) return 'มาก (High)';
+      if (score >= 2.50) return 'ปานกลาง (Moderate)';
+      if (score >= 1.50) return 'น้อย (Low)';
+      return 'น้อยที่สุด (Very Low)';
+    }
+
+    function updateDashboardStats() {
+      const stats = calculateStats();
+      if (!stats) return;
+
+      document.getElementById('page-stat-mean').textContent = stats.overallMean.toFixed(2);
+      document.getElementById('page-stat-sd').textContent = stats.overallSd.toFixed(2);
+      document.getElementById('page-stat-interp').textContent = stats.overallInterpretation;
+      document.getElementById('page-stat-count').textContent = `${stats.sampleSize} คน`;
+
+      // Render table
+      const tableBody = document.getElementById('page-survey-stats-table');
+      if (tableBody) {
+        let rows = '';
+        SURVEY_QUESTIONS.forEach(group => {
+          group.items.forEach(item => {
+            const qStat = stats.questionStats[item.id];
+            rows += `
+              <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
+                <td class="py-2.5 px-3 text-slate-700">${item.text}</td>
+                <td class="py-2.5 px-3 text-center font-bold text-orange-600">${qStat.mean.toFixed(2)}</td>
+                <td class="py-2.5 px-3 text-center text-slate-500">${qStat.sd.toFixed(2)}</td>
+                <td class="py-2.5 px-3 text-center font-medium ${qStat.mean >= 4.5 ? 'text-emerald-600' : 'text-blue-600'}">
+                  ${qStat.interpretation.split(' ')[0]}
+                </td>
+              </tr>
+            `;
+          });
+        });
+        tableBody.innerHTML = rows;
+      }
+
+      // Render Chart.js
+      const canvas = document.getElementById('standaloneSurveyChart');
+      if (canvas && window.Chart) {
+        if (surveyChartInstance) surveyChartInstance.destroy();
+
+        surveyChartInstance = new Chart(canvas, {
+          type: 'bar',
+          data: {
+            labels: stats.categoryStats.map(c => c.name),
+            datasets: [{
+              label: 'ค่าเฉลี่ยความพึงพอใจ',
+              data: stats.categoryStats.map(c => c.mean),
+              backgroundColor: [
+                'rgba(234, 88, 12, 0.85)',
+                'rgba(249, 115, 22, 0.85)',
+                'rgba(217, 119, 6, 0.85)',
+                'rgba(16, 185, 129, 0.85)',
+                'rgba(139, 92, 246, 0.85)'
+              ],
+              borderRadius: 8,
+              barThickness: 28
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { min: 3.0, max: 5.0, ticks: { stepSize: 0.5 } }
+            }
+          }
+        });
+      }
+
+      // Render recent comments
+      const commentsContainer = document.getElementById('page-recent-comments');
+      if (commentsContainer) {
+        const list = CommonState.surveys.filter(s => s.comment).slice(-4).reverse();
+        commentsContainer.innerHTML = list.map(item => `
+          <div class="p-3 rounded-xl bg-[#FCFAF7] border border-slate-100 text-xs space-y-1">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="font-bold text-slate-800">${item.name} (${item.gender}, ${item.age})</span>
+              <span>${item.date}</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">${item.comment}</p>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function handleSurveySubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const scores = {};
+      for (let i = 1; i <= 10; i++) {
+        const val = formData.get(`q${i}`);
+        if (!val) {
+          showToast(`กรุณาตอบคำถามให้ครบทุกข้อ (ข้อ ${i})`, 'warning');
+          return;
+        }
+        scores[`q${i}`] = parseInt(val);
+      }
+
+      const name = formData.get('respondent_name') || 'ผู้ใช้งานทั่วไป';
+      const gender = formData.get('respondent_gender') || 'ไม่ระบุ';
+      const age = formData.get('respondent_age') || 'ไม่ระบุ';
+      const comment = formData.get('respondent_comment') || '';
+
+      const newResponse = {
+        id: Date.now(),
+        name,
+        gender,
+        age,
+        scores,
+        comment,
+        date: new Date().toISOString().split('T')[0]
+      };
+
+      CommonState.surveys.push(newResponse);
+      localStorage.setItem('nangrong_surveys', JSON.stringify(CommonState.surveys));
+
+      let cloudSaved = false;
+      if (window.nangrongSupabase) {
+        const { error } = await window.nangrongSupabase.from('survey_responses').insert({
+          respondent_name: name,
+          respondent_gender: gender,
+          respondent_age: age,
+          scores,
+          comment
+        });
+        cloudSaved = !error;
+        if (error) console.error('Could not save survey to Supabase:', error.message);
+      }
+
+      form.reset();
+      updateDashboardStats();
+      showToast(cloudSaved
+        ? 'บันทึกแบบประเมินแล้ว ขอบคุณมากครับ'
+        : 'บันทึกไว้ในเครื่องนี้แล้ว แต่ยังไม่ได้บันทึกเข้า Supabase', cloudSaved ? 'success' : 'warning');
+
+      document.getElementById('analytics-dashboard')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function exportCSV() {
+      const responses = CommonState.surveys;
+      if (!responses || responses.length === 0) {
+        showToast('ยังไม่มีข้อมูลการประเมิน', 'info');
+        return;
+      }
+
+      let csvContent = '\uFEFF'; // UTF-8 BOM
+      csvContent += 'ID,ผู้ประเมิน,เพศ,ช่วงอายุ,ข้อ1_UI,ข้อ2_องค์ประกอบ,ข้อ3_เมนูง่าย,ข้อ4_มือถือ,ข้อ5_ข้อมูลครบ,ข้อ6_แผนที่,ข้อ7_ค้นหาไว,ข้อ8_ความเร็ว,ข้อ9_ช่วยหาร้าน,ข้อ10_ภาพรวม,ข้อคิดเห็น,วันที่ประเมิน\n';
+
+      responses.forEach(r => {
+        const row = [
+          r.id,
+          `"${r.name}"`,
+          r.gender,
+          `"${r.age}"`,
+          r.scores.q1,
+          r.scores.q2,
+          r.scores.q3,
+          r.scores.q4,
+          r.scores.q5,
+          r.scores.q6,
+          r.scores.q7,
+          r.scores.q8,
+          r.scores.q9,
+          r.scores.q10,
+          `"${(r.comment || '').replace(/"/g, '""')}"`,
+          r.date
+        ];
+        csvContent += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `nangrong_survey_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('ส่งออกไฟล์ข้อมูล CSV เรียบร้อยแล้ว!', 'success');
+    }
+  </script>
+</body>
+</html>

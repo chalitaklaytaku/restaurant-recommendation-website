@@ -1,634 +1,520 @@
-
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>หน้าแรก | นางรอง ลองชิม - ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            }
+          }
+        }
+      }
+    }
+  </script>
 
-<title>กินดี มีร้านอร่อย | นางรอง</title>
+  <!-- Google Fonts: Prompt & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-:root {
-  --green: #365b3d;
-  --dark-green: #25452e;
-  --cream: #fbf8ee;
-  --light-green: #e8eddc;
-}
+  <!-- Leaflet Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-body {
-  font-family: Tahoma, Arial, sans-serif;
-  background: var(--cream);
-  color: #354036;
-  line-height: 1.7;
-}
-
-/* ส่วนหัวเว็บไซต์ */
-header {
-  background: var(--green);
-  color: white;
-  padding: 15px 4%;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.college {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.college-logo {
-  width: 68px;
-  height: 68px;
-  object-fit: contain;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid #e9d9a4;
-  flex-shrink: 0;
-}
-
-.college-name strong {
-  display: block;
-  font-size: 15px;
-}
-
-.college-name small {
-  font-size: 10px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-left: 16px;
-  border-left: 1px solid #aeb9a8;
-}
-
-.brand-icon {
-  font-size: 34px;
-}
-
-.brand h1 {
-  font-size: 23px;
-  line-height: 1.4;
-}
-
-.brand p {
-  font-size: 12px;
-  color: #e6eadf;
-}
-
-nav {
-  margin-left: auto;
-  display: flex;
-  gap: 17px;
-  flex-wrap: wrap;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-nav a:hover {
-  color: #f4dca4;
-}
-
-/* แบนเนอร์ */
-.hero {
-  padding: 42px 20px;
-  text-align: center;
-  background: linear-gradient(135deg, #e5ebd7, #f8f0d9);
-}
-
-.hero .eyebrow {
-  color: #82603e;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.hero h2 {
-  font-size: clamp(27px, 5vw, 42px);
-  color: var(--dark-green);
-  margin: 5px 0;
-}
-
-.hero p {
-  margin-bottom: 20px;
-}
-
-.search-box {
-  max-width: 620px;
-  margin: auto;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 14px 20px;
-  border: 1px solid #a9b9a1;
-  border-radius: 30px;
-  font-size: 16px;
-  outline: none;
-}
-
-.search-box input:focus {
-  border-color: var(--green);
-}
-
-/* รายการอาหาร */
-main {
-  max-width: 1200px;
-  margin: auto;
-  padding: 30px 22px 45px;
-}
-
-.section-title {
-  color: var(--dark-green);
-  font-size: 27px;
-  margin-bottom: 15px;
-}
-
-.filters {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
-}
-
-.filters button {
-  background: white;
-  color: var(--dark-green);
-  border: 1px solid #8ca18a;
-  padding: 9px 19px;
-  border-radius: 25px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.filters button.active,
-.filters button:hover {
-  background: var(--green);
-  color: white;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: white;
-  border: 1px solid #e0ddcf;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: transform .2s, box-shadow .2s;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 7px 18px #263b251a;
-}
-
-/* รูปภาพ */
-.food-photo {
-  height: 210px;
-  background: #e8eddc;
-  overflow: hidden;
-}
-
-.food-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.fallback {
-  width: 100%;
-  height: 100%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: var(--dark-green);
-  background: var(--light-green);
-}
-
-.fallback .emoji {
-  font-size: 65px;
-}
-
-.fallback span {
-  font-weight: bold;
-}
-
-.info {
-  padding: 15px;
-}
-
-.category {
-  display: inline-block;
-  background: #e3ecd8;
-  color: #365b3d;
-  border-radius: 18px;
-  padding: 3px 11px;
-  font-size: 12px;
-  margin-bottom: 7px;
-}
-
-.category.noodle {
-  background: #dceaf5;
-  color: #315d7b;
-}
-
-.category.thai {
-  background: #f4e4c7;
-  color: #795324;
-}
-
-.category.drink {
-  background: #f3dfe4;
-  color: #854556;
-}
-
-.info h3 {
-  font-size: 19px;
-  color: var(--dark-green);
-  margin-bottom: 5px;
-}
-
-.info p {
-  font-size: 14px;
-  min-height: 48px;
-  margin-bottom: 12px;
-}
-
-.location {
-  border-top: 1px solid #eeeadd;
-  padding-top: 9px;
-  color: #697467;
-  font-size: 13px;
-}
-
-.no-results {
-  display: none;
-  text-align: center;
-  padding: 30px;
-}
-
-/* เกี่ยวกับเว็บไซต์ */
-.about {
-  max-width: 1156px;
-  margin: 0 auto 25px;
-  padding: 22px;
-  background: var(--light-green);
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.about h2 {
-  color: var(--dark-green);
-  font-size: 23px;
-  margin-bottom: 5px;
-}
-
-.about p {
-  font-size: 14px;
-}
-
-.about-details {
-  border-left: 2px solid #a0b198;
-  padding-left: 20px;
-}
-
-footer {
-  text-align: center;
-  background: var(--green);
-  color: white;
-  padding: 23px 15px;
-  font-size: 13px;
-}
-
-@media (max-width: 900px) {
-  .cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  nav {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .about-details {
-    border-left: none;
-    padding-left: 0;
-  }
-}
-
-@media (max-width: 560px) {
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .brand {
-    padding-left: 0;
-    border-left: none;
-  }
-
-  .college-logo {
-    width: 58px;
-    height: 58px;
-  }
-
-  .food-photo {
-    height: 220px;
-  }
-
-  .section-title {
-    font-size: 23px;
-  }
-}
-</style>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body class="bg-[#FCFAF7] text-slate-800 antialiased selection:bg-orange-500 selection:text-white flex flex-col min-h-screen">
 
-<body>
+  <!-- ==========================================
+       Top Navigation Bar (Navbar)
+       ========================================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 md:w-6 md:h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg md:text-xl text-slate-900 tracking-tight font-heading">นางรอง ลองชิม</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">อ.นางรอง บุรีรัมย์</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-normal">ระบบแนะนำร้านอาหารลับ & ของอร่อยท้องถิ่น</p>
+          </div>
+        </a>
 
-<!-- ส่วนหัวและตราวิทยาลัย -->
-<header>
-  <div class="college">
-    <img
-      class="college-logo"
-      src="images/college-logo.jpg"
-      alt="ตราวิทยาลัยเทคนิคนางรอง"
-    >
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="nav-link hover:text-orange-600 transition">หน้าแรก</a>
+          <a href="restaurants.html" class="nav-link hover:text-orange-600 transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="nav-link hover:text-orange-600 transition">แผนที่ร้านลับ</a>
+          <a href="survey.html" class="nav-link text-orange-600 font-semibold hover:text-orange-700 transition flex items-center gap-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+            </span>
+            แบบประเมินวิจัย
+          </a>
+          <a href="suggest.html" class="nav-link hover:text-orange-600 transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="nav-link hover:text-orange-600 transition">ข้อมูลโครงงาน</a>
+        </nav>
 
-    <div class="college-name">
-      <strong>วิทยาลัยเทคนิคนางรอง</strong>
-      <small>NANGRONG TECHNICAL COLLEGE</small>
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <!-- Surprise Random Button -->
+          <button 
+            onclick="randomizeSecretSpot()" 
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition">
+            <i data-lucide="dices" class="w-4 h-4 text-amber-600"></i>
+            <span>สุ่มร้านกินอะไรดี?</span>
+          </button>
+
+          <!-- Favorites Button with Badge -->
+          <button 
+            onclick="openFavoritesView()" 
+            title="ดูร้านโปรดของคุณ"
+            class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-600 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="fav-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+
+          <!-- Quick Search Button (Mobile) -->
+          <a href="restaurants.html" class="md:hidden p-2.5 rounded-xl border border-slate-200 hover:bg-orange-50 text-slate-700 hover:text-orange-600 transition">
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </a>
+        </div>
+
+      </div>
     </div>
-  </div>
+  </header>
 
-  <div class="brand">
-    <div class="brand-icon">🍴</div>
-    <div>
-      <h1>กินดี มีร้านอร่อย</h1>
-      <p>แนะนำร้านอาหารในอำเภอนางรอง</p>
+  <!-- ==========================================
+       Hero Section & Quick Search
+       ========================================== -->
+  <main class="flex-grow">
+    <section class="relative overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24">
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-orange-300/30 via-amber-200/20 to-transparent blur-3xl pointer-events-none -z-10 rounded-full"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto">
+          
+          <!-- Senior Project Chapter 1 Tag -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-100/80 border border-orange-200 text-orange-800 text-xs font-semibold mb-6">
+            <i data-lucide="sparkles" class="w-4 h-4 text-orange-600"></i>
+            <span>โครงการวิจัยพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับ อำเภอนางรอง</span>
+          </div>
+
+          <!-- Main Headline -->
+          <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight md:leading-tight font-heading">
+            ค้นพบความอร่อยที่ซ่อนอยู่<br>
+            <span class="bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 bg-clip-text text-transparent">
+              ในมุมลับของเมืองนางรอง
+            </span>
+          </h1>
+
+          <p class="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed font-light">
+            รวบรวมร้านอาหารพื้นบ้าน ขาหมูนางรองระดับตำนาน คาเฟ่บรรยากาศอบอุ่น และร้านลับในตรอกซอกซอย 
+            พร้อมข้อมูลเมนูเด็ด ราคา พิกัด GPS และนำทางด้วย Google Maps อย่างครบถ้วนในที่เดียว
+          </p>
+
+          <!-- Search Form (Redirects to restaurants.html) -->
+          <form action="restaurants.html" method="GET" class="mt-8 max-w-2xl mx-auto">
+            <div class="relative flex items-center bg-white p-2 rounded-2xl shadow-xl shadow-orange-950/5 border border-slate-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-200 transition">
+              <div class="pl-3 text-slate-400">
+                <i data-lucide="search" class="w-5 h-5 text-orange-600"></i>
+              </div>
+              <input 
+                type="text" 
+                name="q" 
+                placeholder="ค้นหาชื่อร้าน, เมนูอาหาร (เช่น ขาหมู, ส้มตำ, ก๋วยเตี๋ยว, คาเฟ่)..." 
+                class="w-full px-3 py-2 text-sm text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none">
+              <button 
+                type="submit" 
+                class="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow transition flex-shrink-0">
+                ค้นหาร้าน
+              </button>
+            </div>
+
+            <!-- Quick Popular Keyword Tags -->
+            <div class="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-xs text-slate-500">
+              <span class="font-medium text-slate-400">คำค้นหายอดฮิต:</span>
+              <a href="restaurants.html?q=ขาหมู" class="hover:text-orange-600 hover:underline">#ขาหมูจิ้งนำ</a>
+              <span>•</span>
+              <a href="restaurants.html?q=ผัดหมี่" class="hover:text-orange-600 hover:underline">#ผัดหมี่เจ๊แม๊ะ</a>
+              <span>•</span>
+              <a href="restaurants.html?q=กะเตี๋ยวตายาย" class="hover:text-orange-600 hover:underline">#กะเตี๋ยวตายาย</a>
+              <span>•</span>
+              <a href="restaurants.html?q=ไก่ย่าง" class="hover:text-orange-600 hover:underline">#ส้มตำวัดขุนก้อง</a>
+              <span>•</span>
+              <a href="restaurants.html?q=Brewsberry" class="hover:text-orange-600 hover:underline">#Brewsberry</a>
+            </div>
+          </form>
+
+          <!-- System Scope Summary Grid -->
+          <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto text-left">
+            <a href="restaurants.html" class="p-4 rounded-2xl bg-white/80 border border-slate-100 shadow-2xs hover:border-orange-300 transition group">
+              <div class="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                <i data-lucide="store" class="w-4 h-4"></i>
+              </div>
+              <h4 class="text-xs font-bold text-slate-800">12+ ร้านลับคัดสรร</h4>
+              <p class="text-[11px] text-slate-500 mt-0.5">ครอบคลุมทั่ว อ.นางรอง →</p>
+            </a>
+            <a href="map.html" class="p-4 rounded-2xl bg-white/80 border border-slate-100 shadow-2xs hover:border-orange-300 transition group">
+              <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                <i data-lucide="map-pinned" class="w-4 h-4"></i>
+              </div>
+              <h4 class="text-xs font-bold text-slate-800">พิกัด GPS แม่นยำ</h4>
+              <p class="text-[11px] text-slate-500 mt-0.5">ดูแผนที่และนำทางจริง →</p>
+            </a>
+            <a href="restaurants.html" class="p-4 rounded-2xl bg-white/80 border border-slate-100 shadow-2xs hover:border-orange-300 transition group">
+              <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+              </div>
+              <h4 class="text-xs font-bold text-slate-800">เมนูเด็ด & ราคาชัดเจน</h4>
+              <p class="text-[11px] text-slate-500 mt-0.5">รู้ราคาก่อนไปทาน →</p>
+            </a>
+            <a href="survey.html" class="p-4 rounded-2xl bg-white/80 border border-slate-100 shadow-2xs hover:border-orange-300 transition group">
+              <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+              </div>
+              <h4 class="text-xs font-bold text-slate-800">มีแบบประเมินวิจัย</h4>
+              <p class="text-[11px] text-slate-500 mt-0.5">สถิติสำหรับบทที่ 4 →</p>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Food Categories Cards Showcase
+         ========================================== -->
+    <section class="py-12 bg-white border-y border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-600">Food Categories</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1 font-heading">
+            เลือกชิมตามประเภทอาหาร
+          </h2>
+          <p class="text-xs md:text-sm text-slate-500 mt-1">คลิกที่หมวดหมู่เพื่อค้นหาร้านอาหารที่คุณชื่นชอบในอำเภอนางรอง</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <!-- Cat 1: Pork Leg -->
+          <a href="restaurants.html?cat=pork-leg" class="p-5 rounded-2xl bg-[#FCFAF7] border border-orange-100 hover:border-orange-400 hover:bg-orange-50/50 transition-all text-center group card-hover">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+              <i data-lucide="beef" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 group-hover:text-orange-600">ขาหมู & จานเดียว</h4>
+            <p class="text-[11px] text-slate-500 mt-1">2 ร้านดังในตำนาน</p>
+          </a>
+
+          <!-- Cat 2: Noodle -->
+          <a href="restaurants.html?cat=noodle" class="p-5 rounded-2xl bg-[#FCFAF7] border border-orange-100 hover:border-orange-400 hover:bg-orange-50/50 transition-all text-center group card-hover">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+              <i data-lucide="soup" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 group-hover:text-orange-600">ก๋วยเตี๋ยว & เส้น</h4>
+            <p class="text-[11px] text-slate-500 mt-1">3 ร้านลับสูตรโบราณ</p>
+          </a>
+
+          <!-- Cat 3: Isan -->
+          <a href="restaurants.html?cat=isan" class="p-5 rounded-2xl bg-[#FCFAF7] border border-orange-100 hover:border-orange-400 hover:bg-orange-50/50 transition-all text-center group card-hover">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-red-100 text-red-700 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+              <i data-lucide="flame" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 group-hover:text-orange-600">อาหารอีสาน & ส้มตำ</h4>
+            <p class="text-[11px] text-slate-500 mt-1">3 ร้านแซ่บนัวแท้</p>
+          </a>
+
+          <!-- Cat 4: Cafe -->
+          <a href="restaurants.html?cat=cafe" class="p-5 rounded-2xl bg-[#FCFAF7] border border-orange-100 hover:border-orange-400 hover:bg-orange-50/50 transition-all text-center group card-hover">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+              <i data-lucide="coffee" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 group-hover:text-orange-600">คาเฟ่ & ของหวาน</h4>
+            <p class="text-[11px] text-slate-500 mt-1">3 คาเฟ่มินิมอลในสวน</p>
+          </a>
+
+          <!-- Cat 5: Night -->
+          <a href="restaurants.html?cat=night" class="p-5 rounded-2xl bg-[#FCFAF7] border border-orange-100 hover:border-orange-400 hover:bg-orange-50/50 transition-all text-center group card-hover col-span-2 sm:col-span-1">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+              <i data-lucide="moon" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 group-hover:text-orange-600">รอบดึก & สตรีทฟู้ด</h4>
+            <p class="text-[11px] text-slate-500 mt-1">1 ร้านเด็ดโต้รุ่ง</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Featured Secret Spots (ร้านลับเด็ดประจำสัปดาห์)
+         ========================================== -->
+    <section class="py-14 bg-[#FFF9F3]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-600">Must Try Hidden Gems</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1 font-heading">
+              ร้านลับแนะนำประจำสัปดาห์ 🔥
+            </h2>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">คัดเลือกร้านที่มีเอกลักษณ์ รสชาติเด็ด และคนท้องถิ่นยกนิ้วให้</p>
+          </div>
+          <a href="restaurants.html" class="mt-4 md:mt-0 inline-flex items-center gap-1.5 text-xs font-bold text-orange-600 hover:text-orange-700">
+            <span>ดูร้านอาหารทั้งหมด (12 ร้าน)</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Featured 3 Gems Grid -->
+        <div id="home-featured-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Dynamically populated via data.js in script below -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Mini-Map Preview Section
+         ========================================== -->
+    <section class="py-14 bg-white border-y border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-orange-600 to-amber-600 rounded-3xl p-6 md:p-10 text-white relative overflow-hidden shadow-xl">
+          <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-7 space-y-4">
+              <span class="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full text-white inline-block">
+                Interactive Map Navigation
+              </span>
+              <h2 class="text-2xl md:text-4xl font-extrabold font-heading leading-tight">
+                แผนที่ปักหมุดร้านลับ<br>ทั่วอำเภอนางรอง 🗺️
+              </h2>
+              <p class="text-xs md:text-sm text-orange-100 leading-relaxed font-light">
+                ค้นหาตำแหน่งร้านในซอยลึก ตรอกตลาดเก่า หรือริมคลองธรรมชาติ 
+                พร้อมระบบเปิด Google Maps นำทางตรงถึงหน้าร้านได้อย่างสะดวก ไม่หลงแน่นอน
+              </p>
+              <div class="pt-2 flex flex-wrap gap-3">
+                <a href="map.html" class="px-5 py-3 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-bold text-xs shadow-md transition inline-flex items-center gap-2">
+                  <i data-lucide="map" class="w-4 h-4"></i>
+                  <span>เปิดดูแผนที่เต็มจอ</span>
+                </a>
+                <button onclick="randomizeSecretSpot()" class="px-5 py-3 rounded-xl bg-orange-700/60 hover:bg-orange-700 border border-orange-400/40 text-white font-medium text-xs transition inline-flex items-center gap-2">
+                  <i data-lucide="dices" class="w-4 h-4"></i>
+                  <span>สุ่มร้านลับให้ฉัน</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5">
+              <div class="rounded-2xl overflow-hidden border-2 border-white/30 shadow-2xl h-64 bg-slate-800 relative">
+                <div id="home-mini-map" class="w-full h-full z-10"></div>
+                <div class="absolute bottom-2 right-2 z-20 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] text-white">
+                  📍 อ.นางรอง จ.บุรีรัมย์
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Callout to Survey & Community
+         ========================================== -->
+    <section class="py-14 bg-[#FCFAF7]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Banner 1: Survey -->
+          <div class="p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mb-4">
+                <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900 font-heading">แบบประเมินความพึงพอใจโครงการ</h3>
+              <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                ร่วมตอบแบบสอบถาม 5 ด้าน เพื่อใช้ในการวิเคราะห์สถิติ (ค่าเฉลี่ย x̄ และ S.D.) 
+                สำหรับบทที่ 4 ของโครงงานวิจัย พร้อมส่งออกไฟล์ Excel/CSV ได้ทันที
+              </p>
+            </div>
+            <div class="mt-6">
+              <a href="survey.html" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition shadow-sm">
+                <span>ทำแบบประเมิน & ดูสถิติ</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Banner 2: Suggest -->
+          <div class="p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4">
+                <i data-lucide="send" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900 font-heading">มีร้านลับอยากแนะนำ?</h3>
+              <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                ร่วมเป็นส่วนหนึ่งในการส่งเสริมร้านอาหารรายย่อยและเศรษฐกิจชุมชน 
+                ส่งข้อมูลร้านเด็ดในตรอกซอกซอยที่คุณประทับใจมาให้เราประชาสัมพันธ์ได้เลย
+              </p>
+            </div>
+            <div class="mt-6">
+              <a href="suggest.html" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-sm">
+                <span>ส่งข้อมูลร้านลับใหม่</span>
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-base font-heading">นางรอง ลองชิม (Nang Rong Secret Taste)</h3>
+            <p class="text-slate-500 text-[11px]">ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+          <a href="index.html" class="hover:text-white transition">หน้าแรก</a>
+          <a href="restaurants.html" class="hover:text-white transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="hover:text-white transition">แผนที่</a>
+          <a href="survey.html" class="hover:text-white transition text-orange-400 font-semibold">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="hover:text-white transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="hover:text-white transition">ข้อมูลโครงงาน</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>© 2026 โครงการพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+        <p>พัฒนาขึ้นเพื่อการศึกษาและการวิจัยชุมชน • สนับสนุนการท่องเที่ยว อ.นางรอง</p>
+      </div>
     </div>
-  </div>
+  </footer>
 
-  <nav>
-    <a href="#home">หน้าแรก</a>
-    <a href="#restaurants">ร้านอาหาร</a>
-    <a href="#about">เกี่ยวกับเรา</a>
-  </nav>
-</header>
-
-<!-- แบนเนอร์หน้าแรก -->
-<section class="hero" id="home">
-  <div class="eyebrow">ยินดีต้อนรับสู่เมืองนางรอง</div>
-  <h2>ของกินบ้านเฮา อำเภอนางรอง</h2>
-  <p>รวมเมนูอาหารบ้าน ๆ อร่อยง่าย ราคาเป็นกันเอง</p>
-
-  <div class="search-box">
-    <input
-      type="search"
-      id="search"
-      placeholder="🔍 ค้นหาร้านอาหารหรือชื่อเมนู..."
-      aria-label="ค้นหาร้านอาหาร"
-    >
-  </div>
-</section>
-
-<!-- การ์ดอาหาร -->
-<main id="restaurants">
-  <h2 class="section-title">🍚 เมนูอาหารแนะนำ</h2>
-
-  <div class="filters">
-    <button class="active" data-filter="all">ทั้งหมด</button>
-    <button data-filter="isan">อาหารอีสาน</button>
-    <button data-filter="noodle">ก๋วยเตี๋ยว</button>
-    <button data-filter="thai">อาหารตามสั่ง</button>
-    <button data-filter="drink">เครื่องดื่ม</button>
-  </div>
-
-  <div class="cards">
-
-    <!-- เมนู 1 -->
-    <article class="card" data-category="isan">
-      <div class="food-photo">
-        <img
-          src="https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=900&q=85"
-          alt="ส้มตำ"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-        >
-        <div class="fallback">
-          <div class="emoji">🥗</div>
-          <span>เมนูส้มตำ</span>
-        </div>
-      </div>
-      <div class="info">
-        <span class="category">อาหารอีสาน</span>
-        <h3>ร้านส้มตำ</h3>
-        <p>ส้มตำไทย ส้มตำปลาร้า ลาบ น้ำตก และข้าวเหนียว</p>
-        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
-      </div>
-    </article>
-
-    <!-- เมนู 2 -->
-    <article class="card" data-category="isan">
-      <div class="food-photo">
-        <img
-          src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=900&q=85"
-          alt="ไก่ย่าง"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-        >
-        <div class="fallback">
-          <div class="emoji">🍗</div>
-          <span>เมนูไก่ย่าง</span>
-        </div>
-      </div>
-      <div class="info">
-        <span class="category">อาหารอีสาน</span>
-        <h3>ร้านไก่ย่าง</h3>
-        <p>ไก่ย่างหอม ๆ กินคู่ข้าวเหนียวและน้ำจิ้มแจ่ว</p>
-        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
-      </div>
-    </article>
-
-    <!-- เมนู 3 -->
-    <article class="card" data-category="noodle">
-      <div class="food-photo">
-        <img
-          src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=85"
-          alt="ก๋วยเตี๋ยวในชาม"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-        >
-        <div class="fallback">
-          <div class="emoji">🍜</div>
-          <span>เมนูก๋วยเตี๋ยว</span>
-        </div>
-      </div>
-      <div class="info">
-        <span class="category noodle">ก๋วยเตี๋ยว</span>
-        <h3>ร้านก๋วยเตี๋ยว</h3>
-        <p>ก๋วยเตี๋ยวน้ำใส น้ำตก ลูกชิ้น และหมูชิ้น</p>
-        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
-      </div>
-    </article>
-
-    <!-- เมนู 4 -->
-    <article class="card" data-category="thai">
-      <div class="food-photo">
-        <img
-          src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=900&q=85"
-          alt="ข้าวกะเพรา"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-        >
-        <div class="fallback">
-          <div class="emoji">🍳</div>
-          <span>เมนูข้าวกะเพรา</span>
-        </div>
-      </div>
-      <div class="info">
-        <span class="category thai">อาหารตามสั่ง</span>
-        <h3>ร้านข้าวตามสั่ง</h3>
-        <p>ข้าวกะเพรา ข้าวผัด ไข่เจียว และอาหารจานเดียว</p>
-        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
-      </div>
-    </article>
-
-    <!-- เมนู 5 -->
-    <article class="card" data-category="thai">
-      <div class="food-photo">
-        <img
-          src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=900&q=85"
-          alt="แกงไทย"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-        >
-        <div class="fallback">
-          <div class="emoji">🍛</div>
-          <span>เมนูข้าวแกง</span>
-        </div>
-      </div>
-      <div class="info">
-        <span class="category thai">อาหารไทย</span>
-        <h3>ร้านข้าวแกง</h3>
-        <p>แกงต่าง ๆ กับข้าวสวยและกับข้าวแบบบ้าน ๆ</p>
-        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
-      </div>
-    </article>
-
-    <!-- เมนู 6 -->
-    <article class="card" data-category="drink">
-      <div class="food-photo">
-        <img
-          src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=85"
-          alt="กาแฟเย็น"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-        >
-        <div class="fallback">
-          <div class="emoji">🧋</div>
-          <span>เมนูเครื่องดื่มเย็น</span>
-        </div>
-      </div>
-      <div class="info">
-        <span class="category drink">เครื่องดื่ม</span>
-        <h3>ร้านกาแฟและน้ำชง</h3>
-        <p>กาแฟเย็น ชาเย็น โกโก้ และเครื่องดื่มเย็น ๆ</p>
-        <div class="location">📍 อำเภอนางรอง บุรีรัมย์</div>
-      </div>
-    </article>
-
-  </div>
-
-  <div class="no-results" id="noResults">
-    ไม่พบเมนูที่ค้นหา ลองค้นหาคำอื่นนะ 😊
-  </div>
-</main>
-
-<!-- ข้อมูลผู้จัดทำ -->
-<section class="about" id="about">
-  <div>
-    <h2>🌿 เกี่ยวกับเว็บไซต์</h2>
-    <p>เว็บไซต์แนะนำอาหารในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
-    <p>จัดทำขึ้นเพื่อการเรียนรู้การพัฒนาเว็บไซต์ทางธุรกิจ</p>
-  </div>
-
-  <div class="about-details">
-    <p>ผู้จัดทำ: ....................................</p>
-    <p>สาขาเทคโนโลยีธุรกิจดิจิทัล ระดับ ปวส.</p>
-    <p>วิทยาลัยเทคนิคนางรอง</p>
-  </div>
-</section>
-
-<footer>
-  <p>© 2026 กินดี มีร้านอร่อย</p>
-  <p>เว็บไซต์เพื่อการศึกษา | อำเภอนางรอง จังหวัดบุรีรัมย์</p>
-</footer>
-
-<script>
-const search = document.getElementById("search");
-const buttons = document.querySelectorAll(".filters button");
-const cards = document.querySelectorAll(".card");
-const noResults = document.getElementById("noResults");
-
-let currentFilter = "all";
-
-function filterCards() {
-  const keyword = search.value.trim().toLowerCase();
-  let count = 0;
-
-  cards.forEach(card => {
-    const categoryMatch =
-      currentFilter === "all" ||
-      card.dataset.category === currentFilter;
-
-    const textMatch =
-      card.innerText.toLowerCase().includes(keyword);
-
-    const show = categoryMatch && textMatch;
-
-    card.style.display = show ? "" : "none";
-
-    if (show) count++;
-  });
-
-  noResults.style.display = count === 0 ? "block" : "none";
-}
-
-buttons.forEach(button => {
-  button.addEventListener("click", () => {
-    currentFilter = button.dataset.filter;
-
-    buttons.forEach(item => {
-      item.classList.toggle("active", item === button);
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    // Home Page Specific Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHomeFeatured();
+      initHomeMiniMap();
     });
 
-    filterCards();
-  });
-});
+    function renderHomeFeatured() {
+      const container = document.getElementById('home-featured-grid');
+      if (!container) return;
 
-search.addEventListener("input", filterCards);
-</script>
+      // Select 3 top gems (e.g. ID 2 ผัดหมี่เจ๊แม๊ะ, ID 3 กะเตี๋ยวตายาย, ID 5 Brewsberry)
+      const featured = RESTAURANTS.filter(r => [2, 3, 5].includes(r.id));
 
+      container.innerHTML = featured.map(place => {
+        const secretInfo = SECRET_LEVELS[place.secretLevel];
+        return `
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden card-hover flex flex-col h-full group">
+            <div class="relative h-48 overflow-hidden">
+              <img src="${place.coverImage}" alt="${place.name}" class="w-full h-full object-cover img-zoom">
+              <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${secretInfo.badgeClass}">
+                ${secretInfo.label}
+              </span>
+              <button 
+                type="button" 
+                onclick="toggleFavorite(${place.id})"
+                class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 text-slate-700 hover:text-rose-500 flex items-center justify-center shadow">
+                <i data-lucide="heart" class="w-4 h-4 ${CommonState.favorites.includes(place.id) ? 'fill-rose-500 text-rose-500' : ''}"></i>
+              </button>
+              <div class="absolute bottom-2 left-3 text-white text-xs bg-black/60 px-2 py-0.5 rounded-md">
+                ${place.priceRange}
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-xs mb-1">
+                  <span class="text-orange-600 font-medium">${CATEGORIES.find(c => c.id === place.category)?.name}</span>
+                  <span class="font-bold text-amber-500 flex items-center gap-0.5">
+                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i> ${place.rating}
+                  </span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-orange-600 transition truncate">${place.name}</h3>
+                <p class="text-xs text-slate-500 mt-1 line-clamp-2">${place.description}</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span class="text-slate-400 truncate max-w-[150px]">✨ ${place.signatureDishes[0]?.name}</span>
+                <a href="restaurant-detail.html?id=${place.id}" class="text-orange-600 font-bold hover:translate-x-1 transition-transform inline-flex items-center gap-0.5">
+                  ดูข้อมูล <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function initHomeMiniMap() {
+      const mapEl = document.getElementById('home-mini-map');
+      if (!mapEl || !window.L) return;
+
+      const miniMap = L.map('home-mini-map', {
+        zoomControl: false,
+        dragging: false,
+        touchZoom: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false
+      }).setView([14.6367, 102.7917], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(miniMap);
+
+      RESTAURANTS.slice(0, 6).forEach(place => {
+        L.circleMarker([place.lat, place.lng], {
+          radius: 7,
+          fillColor: '#EA580C',
+          color: '#ffffff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.9
+        }).addTo(miniMap);
+      });
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สำรวจร้านอาหารลับ | นางรอง ลองชิม - อ.นางรอง จ.บุรีรัมย์</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#FCFAF7] text-slate-800 antialiased selection:bg-orange-500 selection:text-white flex flex-col min-h-screen">
+
+  <!-- ==========================================
+       Top Navigation Bar (Navbar)
+       ========================================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 md:w-6 md:h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg md:text-xl text-slate-900 tracking-tight font-heading">นางรอง ลองชิม</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">อ.นางรอง บุรีรัมย์</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-normal">ระบบแนะนำร้านอาหารลับ & ของอร่อยท้องถิ่น</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="nav-link hover:text-orange-600 transition">หน้าแรก</a>
+          <a href="restaurants.html" class="nav-link hover:text-orange-600 transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="nav-link hover:text-orange-600 transition">แผนที่ร้านลับ</a>
+          <a href="survey.html" class="nav-link text-orange-600 font-semibold hover:text-orange-700 transition flex items-center gap-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+            </span>
+            แบบประเมินวิจัย
+          </a>
+          <a href="suggest.html" class="nav-link hover:text-orange-600 transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="nav-link hover:text-orange-600 transition">ข้อมูลโครงงาน</a>
+        </nav>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <button 
+            onclick="randomizeSecretSpot()" 
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition">
+            <i data-lucide="dices" class="w-4 h-4 text-amber-600"></i>
+            <span>สุ่มร้านกินอะไรดี?</span>
+          </button>
+
+          <button 
+            onclick="openFavoritesView()" 
+            title="ดูร้านโปรดของคุณ"
+            class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-600 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="fav-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       Main Content: Search & Directory
+       ========================================== -->
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Title & Breadcrumb -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
+          <a href="index.html" class="hover:text-orange-600">หน้าแรก</a>
+          <span>/</span>
+          <span class="text-orange-600 font-medium">สำรวจร้านอาหาร</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 font-heading">
+          สำรวจร้านอาหารลับในอำเภอนางรอง 🍜
+        </h1>
+        <p class="text-xs md:text-sm text-slate-500 mt-1">
+          ค้นหาร้านอร่อย เมนูเด็ด คัดสรรพิเศษจากทั่วอำเภอนางรอง ทั้งร้านในตรอก คาเฟ่ในสวน และร้านดังคู่เมือง
+        </p>
+      </div>
+
+      <!-- Live Search Bar -->
+      <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="relative flex items-center">
+          <div class="pl-3 text-slate-400">
+            <i data-lucide="search" class="w-5 h-5 text-orange-600"></i>
+          </div>
+          <input 
+            type="text" 
+            id="restaurants-search-input" 
+            placeholder="ค้นหาชื่อร้าน, เมนูอาหาร (เช่น ขาหมู, ส้มตำ, ก๋วยเตี๋ยว, ข้าวต้ม, Dirty)..." 
+            class="w-full px-3 py-2 text-sm text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none">
+          <button 
+            type="button" 
+            id="clear-search-btn"
+            class="hidden text-xs text-slate-400 hover:text-slate-600 px-3 py-1">
+            ล้างคำค้น
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar" id="category-pills">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Advanced Filter & Sort Toolbar -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          
+          <!-- Price Filter -->
+          <div>
+            <label class="block text-slate-500 font-medium mb-1">ช่วงราคา:</label>
+            <select id="price-filter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:border-orange-500">
+              <option value="all">ทุกช่วงราคา</option>
+              <option value="1">฿ ประหยัด (ต่ำกว่า 60 บาท)</option>
+              <option value="2">฿฿ ปานกลาง (60 - 200 บาท)</option>
+            </select>
+          </div>
+
+          <!-- Secret Level Filter -->
+          <div>
+            <label class="block text-slate-500 font-medium mb-1">ระดับความลับ:</label>
+            <select id="secret-filter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:border-orange-500">
+              <option value="all">ทุกระดับความลับ</option>
+              <option value="ultra-secret">ร้านลับระดับตำนาน (ในตรอก/ซอย)</option>
+              <option value="local-gem">ร้านเด็ดคนท้องถิ่น</option>
+              <option value="legendary">ร้านดังคู่เมืองนางรอง</option>
+            </select>
+          </div>
+
+          <!-- Sort Filter -->
+          <div>
+            <label class="block text-slate-500 font-medium mb-1">จัดเรียงตาม:</label>
+            <select id="sort-by" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:border-orange-500">
+              <option value="rating-desc">คะแนนรีวิวสูงสุด ★</option>
+              <option value="reviews-desc">จำนวนรีวิวมากที่สุด</option>
+              <option value="price-asc">ราคา: น้อยไปหามาก</option>
+              <option value="price-desc">ราคา: มากไปหาน้อย</option>
+            </select>
+          </div>
+
+          <!-- Open Now Toggle & Reset -->
+          <div class="flex items-end justify-between gap-2 pt-2 sm:pt-0">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="opennow-toggle" class="w-4 h-4 rounded text-orange-600 focus:ring-orange-500">
+              <span class="text-xs font-semibold text-slate-700">เปิดอยู่ตอนนี้</span>
+            </label>
+            <button onclick="resetFilters()" class="text-xs text-slate-400 hover:text-orange-600 underline font-medium">
+              ล้างตัวกรองทั้งหมด
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Status Bar: Count & View Switcher -->
+      <div class="flex items-center justify-between text-xs text-slate-500 mb-6">
+        <span id="results-count" class="font-bold text-slate-800 text-sm">กำลังค้นหา...</span>
+        <div class="flex items-center gap-3">
+          <a href="map.html" class="inline-flex items-center gap-1.5 text-orange-600 font-semibold hover:underline">
+            <i data-lucide="map" class="w-4 h-4"></i>
+            <span>ดูบนแผนที่</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Restaurant Cards Grid -->
+      <div id="restaurants-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Injected via JavaScript -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-base font-heading">นางรอง ลองชิม (Nang Rong Secret Taste)</h3>
+            <p class="text-slate-500 text-[11px]">ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+          <a href="index.html" class="hover:text-white transition">หน้าแรก</a>
+          <a href="restaurants.html" class="text-orange-400 font-semibold">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="hover:text-white transition">แผนที่</a>
+          <a href="survey.html" class="hover:text-white transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="hover:text-white transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="hover:text-white transition">ข้อมูลโครงงาน</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>© 2026 โครงการพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+        <p>พัฒนาขึ้นเพื่อการศึกษาและการวิจัยชุมชน • สนับสนุนการท่องเที่ยว อ.นางรอง</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    // State for Explore Page
+    const PageState = {
+      activeCategory: 'all',
+      searchQuery: '',
+      priceFilter: 'all',
+      secretFilter: 'all',
+      openNowOnly: false,
+      sortBy: 'rating-desc',
+      favoritesOnly: false
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Parse URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('q')) {
+        PageState.searchQuery = urlParams.get('q').trim().toLowerCase();
+        const input = document.getElementById('restaurants-search-input');
+        if (input) input.value = urlParams.get('q');
+      }
+      if (urlParams.has('cat')) {
+        PageState.activeCategory = urlParams.get('cat');
+      }
+      if (urlParams.has('fav')) {
+        PageState.favoritesOnly = true;
+      }
+
+      renderCategoryPills();
+      filterAndRender();
+
+      // Setup Listeners
+      const searchInput = document.getElementById('restaurants-search-input');
+      const clearBtn = document.getElementById('clear-search-btn');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          PageState.searchQuery = e.target.value.trim().toLowerCase();
+          clearBtn?.classList.toggle('hidden', PageState.searchQuery === '');
+          filterAndRender();
+        });
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          if (searchInput) searchInput.value = '';
+          PageState.searchQuery = '';
+          clearBtn.classList.add('hidden');
+          filterAndRender();
+        });
+      }
+
+      document.getElementById('price-filter')?.addEventListener('change', (e) => {
+        PageState.priceFilter = e.target.value;
+        filterAndRender();
+      });
+
+      document.getElementById('secret-filter')?.addEventListener('change', (e) => {
+        PageState.secretFilter = e.target.value;
+        filterAndRender();
+      });
+
+      document.getElementById('sort-by')?.addEventListener('change', (e) => {
+        PageState.sortBy = e.target.value;
+        filterAndRender();
+      });
+
+      document.getElementById('opennow-toggle')?.addEventListener('change', (e) => {
+        PageState.openNowOnly = e.target.checked;
+        filterAndRender();
+      });
+    });
+
+    // Provide hook for common.js
+    window.refreshRestaurantsList = function() {
+      filterAndRender();
+    };
+
+    function renderCategoryPills() {
+      const container = document.getElementById('category-pills');
+      if (!container) return;
+
+      container.innerHTML = CATEGORIES.map(cat => {
+        const isActive = PageState.activeCategory === cat.id;
+        const activeClasses = isActive 
+          ? 'bg-orange-600 text-white shadow-md shadow-orange-600/30 font-medium' 
+          : 'bg-white text-slate-700 hover:bg-orange-50 border border-slate-200';
+
+        return `
+          <button 
+            onclick="setCategory('${cat.id}')"
+            class="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm transition-all whitespace-nowrap ${activeClasses}">
+            <i data-lucide="${cat.icon}" class="w-4 h-4"></i>
+            <span>${cat.name}</span>
+          </button>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function setCategory(catId) {
+      PageState.activeCategory = catId;
+      PageState.favoritesOnly = false; // reset fav filter when clicking category
+      renderCategoryPills();
+      filterAndRender();
+    }
+
+    function filterAndRender() {
+      const container = document.getElementById('restaurants-grid');
+      const countEl = document.getElementById('results-count');
+      if (!container) return;
+
+      let list = [...RESTAURANTS];
+
+      // 1. Favorites Only Check
+      if (PageState.favoritesOnly) {
+        list = list.filter(item => CommonState.favorites.includes(item.id));
+      }
+
+      // 2. Category Filter
+      if (PageState.activeCategory !== 'all') {
+        list = list.filter(item => item.category === PageState.activeCategory);
+      }
+
+      // 3. Search Query Filter
+      if (PageState.searchQuery) {
+        const q = PageState.searchQuery;
+        list = list.filter(item => 
+          item.name.toLowerCase().includes(q) ||
+          item.description.toLowerCase().includes(q) ||
+          item.address.toLowerCase().includes(q) ||
+          item.highlight.toLowerCase().includes(q) ||
+          item.signatureDishes.some(d => d.name.toLowerCase().includes(q))
+        );
+      }
+
+      // 4. Price Filter
+      if (PageState.priceFilter !== 'all') {
+        const level = parseInt(PageState.priceFilter);
+        list = list.filter(item => item.priceLevel === level);
+      }
+
+      // 5. Secret Level Filter
+      if (PageState.secretFilter !== 'all') {
+        list = list.filter(item => item.secretLevel === PageState.secretFilter);
+      }
+
+      // 6. Open Now Filter
+      if (PageState.openNowOnly) {
+        list = list.filter(item => item.isOpenNow);
+      }
+
+      // 7. Sort
+      list.sort((a, b) => {
+        if (PageState.sortBy === 'rating-desc') return b.rating - a.rating;
+        if (PageState.sortBy === 'reviews-desc') return b.reviewCount - a.reviewCount;
+        if (PageState.sortBy === 'price-asc') return a.priceLevel - b.priceLevel;
+        if (PageState.sortBy === 'price-desc') return b.priceLevel - a.priceLevel;
+        return 0;
+      });
+
+      // Update count text
+      if (countEl) {
+        if (PageState.favoritesOnly) {
+          countEl.innerHTML = `<span class="text-rose-600">♥ ร้านโปรดที่คุณบันทึกไว้ (${list.length} ร้าน)</span>`;
+        } else {
+          countEl.textContent = `พบ ${list.length} ร้านอร่อยในอำเภอนางรอง`;
+        }
+      }
+
+      // Empty State
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-4">
+              <i data-lucide="search-x" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800">ไม่พบร้านอาหารที่ตรงตามเงื่อนไข</h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">ลองเปลี่ยนคำค้นหา หรือรีเซ็ตตัวกรองเพื่อดูร้านอาหารทั้งหมดในอำเภอนางรอง</p>
+            <button onclick="resetFilters()" class="mt-4 px-5 py-2.5 rounded-xl bg-orange-600 text-white text-xs font-semibold hover:bg-orange-700 transition">
+              รีเซ็ตตัวกรองทั้งหมด
+            </button>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      // Render Grid Cards
+      container.innerHTML = list.map(item => {
+        const secret = SECRET_LEVELS[item.secretLevel];
+        const isFav = CommonState.favorites.includes(item.id);
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden card-hover flex flex-col h-full group">
+            <div class="relative h-52 overflow-hidden">
+              <img src="${item.coverImage}" alt="${item.name}" class="w-full h-full object-cover img-zoom">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+              
+              <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${secret.badgeClass}">
+                ${secret.label}
+              </span>
+
+              <button 
+                type="button" 
+                onclick="toggleFavorite(${item.id})"
+                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-slate-700 hover:text-rose-500 hover:scale-110 transition shadow">
+                <i data-lucide="heart" class="w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}"></i>
+              </button>
+
+              <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-sm">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  เปิดอยู่
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-sm font-medium">
+                  ${item.priceRange}
+                </span>
+              </div>
+            </div>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md">
+                    ${CATEGORIES.find(c => c.id === item.category)?.name || 'ทั่วไป'}
+                  </span>
+                  <div class="flex items-center gap-1 text-xs font-bold text-amber-500">
+                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                    <span>${item.rating}</span>
+                    <span class="text-slate-400 font-normal">(${item.reviewCount})</span>
+                  </div>
+                </div>
+
+                <a href="restaurant-detail.html?id=${item.id}">
+                  <h3 class="text-lg font-bold text-slate-900 group-hover:text-orange-600 transition truncate">
+                    ${item.name}
+                  </h3>
+                </a>
+
+                <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                  ${item.description}
+                </p>
+
+                <div class="mt-3 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-600">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-orange-500 flex-shrink-0"></i>
+                  <span class="truncate font-medium text-slate-700">เมนูเด็ด: ${item.signatureDishes[0]?.name || '-'}</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span class="text-slate-500 flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                  ${item.openHours.split('(')[0]}
+                </span>
+                <a href="restaurant-detail.html?id=${item.id}" class="text-orange-600 font-bold group-hover:translate-x-1 transition-transform inline-flex items-center gap-0.5">
+                  ดูรายละเอียด <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function resetFilters() {
+      PageState.activeCategory = 'all';
+      PageState.searchQuery = '';
+      PageState.priceFilter = 'all';
+      PageState.secretFilter = 'all';
+      PageState.openNowOnly = false;
+      PageState.sortBy = 'rating-desc';
+      PageState.favoritesOnly = false;
+
+      const searchInput = document.getElementById('restaurants-search-input');
+      if (searchInput) searchInput.value = '';
+      const priceFilter = document.getElementById('price-filter');
+      if (priceFilter) priceFilter.value = 'all';
+      const secretFilter = document.getElementById('secret-filter');
+      if (secretFilter) secretFilter.value = 'all';
+      const sortBy = document.getElementById('sort-by');
+      if (sortBy) sortBy.value = 'rating-desc';
+      const openNowToggle = document.getElementById('opennow-toggle');
+      if (openNowToggle) openNowToggle.checked = false;
+
+      renderCategoryPills();
+      filterAndRender();
+    }
+  </script>
+</body>
+</html>

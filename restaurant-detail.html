@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายละเอียดร้านอาหาร | นางรอง ลองชิม</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#FCFAF7] text-slate-800 antialiased selection:bg-orange-500 selection:text-white flex flex-col min-h-screen">
+
+  <!-- ==========================================
+       Top Navigation Bar (Navbar)
+       ========================================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 md:w-6 md:h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg md:text-xl text-slate-900 tracking-tight font-heading">นางรอง ลองชิม</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">อ.นางรอง บุรีรัมย์</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-normal">ระบบแนะนำร้านอาหารลับ & ของอร่อยท้องถิ่น</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="nav-link hover:text-orange-600 transition">หน้าแรก</a>
+          <a href="restaurants.html" class="nav-link text-orange-600 font-semibold hover:text-orange-700 transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="nav-link hover:text-orange-600 transition">แผนที่ร้านลับ</a>
+          <a href="survey.html" class="nav-link hover:text-orange-600 transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="nav-link hover:text-orange-600 transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="nav-link hover:text-orange-600 transition">ข้อมูลโครงงาน</a>
+        </nav>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <button 
+            onclick="randomizeSecretSpot()" 
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition">
+            <i data-lucide="dices" class="w-4 h-4 text-amber-600"></i>
+            <span>สุ่มร้านกินอะไรดี?</span>
+          </button>
+
+          <button 
+            onclick="openFavoritesView()" 
+            title="ดูร้านโปรดของคุณ"
+            class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-600 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="fav-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       Detail Page Content
+       ========================================== -->
+  <main class="flex-grow py-8 md:py-12" id="detail-main-container">
+    <!-- Populated via JavaScript based on ?id= -->
+  </main>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-base font-heading">นางรอง ลองชิม (Nang Rong Secret Taste)</h3>
+            <p class="text-slate-500 text-[11px]">ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+          <a href="index.html" class="hover:text-white transition">หน้าแรก</a>
+          <a href="restaurants.html" class="hover:text-white transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="hover:text-white transition">แผนที่</a>
+          <a href="survey.html" class="hover:text-white transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="hover:text-white transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="hover:text-white transition">ข้อมูลโครงงาน</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>© 2026 โครงการพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+        <p>พัฒนาขึ้นเพื่อการศึกษาและการวิจัยชุมชน • สนับสนุนการท่องเที่ยว อ.นางรอง</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const restaurantId = parseInt(urlParams.get('id') || '1');
+      renderRestaurantDetail(restaurantId);
+    });
+
+    function renderRestaurantDetail(id) {
+      const place = RESTAURANTS.find(r => r.id === id) || RESTAURANTS[0];
+      const container = document.getElementById('detail-main-container');
+      if (!container) return;
+
+      document.title = `${place.name} | นางรอง ลองชิม`;
+
+      const secret = SECRET_LEVELS[place.secretLevel];
+      const category = CATEGORIES.find(c => c.id === place.category);
+      const isFav = CommonState.favorites.includes(place.id);
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`;
+      const reviews = CommonState.userReviews[place.id] || [];
+
+      // Find related places in same category
+      const related = RESTAURANTS.filter(r => r.category === place.category && r.id !== place.id).slice(0, 3);
+
+      container.innerHTML = `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <!-- Breadcrumb -->
+          <div class="flex items-center gap-2 text-xs text-slate-400 mb-6">
+            <a href="index.html" class="hover:text-orange-600">หน้าแรก</a>
+            <span>/</span>
+            <a href="restaurants.html" class="hover:text-orange-600">สำรวจร้านอาหาร</a>
+            <span>/</span>
+            <span class="text-orange-600 font-medium">${place.name}</span>
+          </div>
+
+          <!-- Hero Cover Banner -->
+          <div class="relative rounded-3xl overflow-hidden bg-slate-900 shadow-xl mb-8">
+            <div class="h-72 sm:h-96 w-full overflow-hidden relative">
+              <img src="${place.coverImage}" alt="${place.name}" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/20"></div>
+            </div>
+
+            <!-- Header Badges -->
+            <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full ${secret.badgeClass}">
+                ${secret.label}
+              </span>
+              <span class="text-xs font-medium px-3 py-1 rounded-full bg-white/90 text-slate-800 backdrop-blur-sm">
+                ${category?.name || 'อาหารทั่วไป'}
+              </span>
+              <span class="text-xs font-medium px-3 py-1 rounded-full bg-emerald-500/90 text-white backdrop-blur-sm">
+                ● เปิดอยู่ตอนนี้
+              </span>
+            </div>
+
+            <!-- Favorite Top Button -->
+            <button 
+              onclick="toggleFavorite(${place.id}); renderRestaurantDetail(${place.id})"
+              class="absolute top-6 right-6 p-3 rounded-full bg-white/90 text-slate-700 hover:text-rose-500 transition shadow-lg">
+              <i data-lucide="heart" class="w-5 h-5 ${isFav ? 'fill-rose-500 text-rose-500' : ''}"></i>
+            </button>
+
+            <!-- Title & Subtitle overlay -->
+            <div class="absolute bottom-6 left-6 right-6 text-white">
+              <div class="flex items-center gap-3 mb-2 text-xs">
+                <span class="flex items-center gap-1 font-bold text-amber-400">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> ${place.rating} (${place.reviewCount + reviews.length} รีวิว)
+                </span>
+                <span>•</span>
+                <span class="bg-black/50 px-2.5 py-0.5 rounded-full font-medium">ช่วงราคา: ${place.priceRange}</span>
+              </div>
+              <h1 class="text-2xl sm:text-4xl font-extrabold font-heading leading-tight">${place.name}</h1>
+              <p class="text-xs sm:text-sm text-orange-200 mt-1 flex items-center gap-1.5 font-light">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-300 flex-shrink-0"></i>
+                <span>${place.highlight}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Buttons Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+            <a href="${googleMapsUrl}" target="_blank" class="py-3.5 px-4 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-600/20 transition">
+              <i data-lucide="navigation" class="w-4 h-4"></i>
+              <span>เปิด Google Maps นำทาง</span>
+            </a>
+            <a href="tel:${place.phone}" class="py-3.5 px-4 rounded-2xl bg-white border border-slate-200 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 hover:bg-slate-50 transition shadow-2xs">
+              <i data-lucide="phone-call" class="w-4 h-4 text-emerald-600"></i>
+              <span>โทร: ${place.phone}</span>
+            </a>
+            <button onclick="shareDetail('${place.name}', '${place.highlight}')" class="py-3.5 px-4 rounded-2xl bg-white border border-slate-200 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 hover:bg-slate-50 transition shadow-2xs">
+              <i data-lucide="share-2" class="w-4 h-4 text-blue-600"></i>
+              <span>แชร์ร้านนี้</span>
+            </button>
+            <a href="restaurants.html" class="py-3.5 px-4 rounded-2xl bg-white border border-slate-200 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 hover:bg-slate-50 transition shadow-2xs">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              <span>กลับไปหน้ารวมร้าน</span>
+            </a>
+          </div>
+
+          <!-- Grid: Details & Map Sidebar -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Column (8 cols): Info & Dishes & Reviews -->
+            <div class="lg:col-span-8 space-y-8">
+              
+              <!-- Story / Description -->
+              <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2 font-heading">
+                  <i data-lucide="book-open" class="w-5 h-5 text-orange-600"></i>
+                  เรื่องราวและความเป็นมาของร้าน
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  ${place.description}
+                </p>
+              </div>
+
+              <!-- Signature Dishes -->
+              <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 font-heading">
+                    <i data-lucide="utensils" class="w-5 h-5 text-orange-600"></i>
+                    เมนูแนะนำห้ามพลาด (Signature Dishes)
+                  </h3>
+                  <span class="text-xs text-orange-600 bg-orange-50 px-2.5 py-1 rounded-lg font-bold">
+                    ${place.signatureDishes.length} เมนูเด็ด
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  ${place.signatureDishes.map(dish => `
+                    <div class="p-4 rounded-2xl border border-slate-100 bg-[#FCFAF7] hover:border-orange-300 transition flex items-start justify-between gap-3">
+                      <div>
+                        <h4 class="text-sm font-bold text-slate-800">${dish.name}</h4>
+                        <p class="text-xs text-slate-500 mt-1">${dish.desc}</p>
+                      </div>
+                      <span class="text-sm font-bold text-orange-600 bg-white px-3 py-1 rounded-xl shadow-2xs border border-orange-100 whitespace-nowrap">
+                        ${dish.price}
+                      </span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Reviews & Rating Section -->
+              <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2 font-heading">
+                  <i data-lucide="message-square" class="w-5 h-5 text-orange-600"></i>
+                  รีวิวและความคิดเห็นจากผู้ใช้งาน (${place.reviewCount + reviews.length} รีวิว)
+                </h3>
+
+                <!-- Review Submission Form -->
+                <form onsubmit="handleDetailReviewSubmit(event, ${place.id})" class="mb-8 p-5 rounded-2xl bg-orange-50/50 border border-orange-100">
+                  <h4 class="text-xs font-bold text-slate-800 mb-2">เขียนรีวิวและให้คะแนนร้านนี้:</h4>
+                  
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="flex items-center gap-1" id="detail-star-selector">
+                      ${[1, 2, 3, 4, 5].map(s => `
+                        <button type="button" onclick="setDetailStar(${s})" class="star-btn-detail text-amber-400 hover:scale-125 transition" data-star="${s}">
+                          <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                        </button>
+                      `).join('')}
+                    </div>
+                    <span class="text-xs text-slate-500 font-medium" id="detail-star-label">5 ดาว (ดีเยี่ยมมาก)</span>
+                    <input type="hidden" id="detail-star-value" value="5">
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                    <input type="text" id="detail-review-name" required placeholder="ชื่อของคุณ หรือ นามแฝง" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-orange-500">
+                    <input type="text" id="detail-review-dish" placeholder="เมนูที่สั่ง (เช่น ขาหมูเนื้อหนัง)" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-orange-500">
+                  </div>
+
+                  <textarea id="detail-review-comment" required rows="2" placeholder="รสชาติเป็นอย่างไร? บรรยากาศ การบริการ แนะนำอะไรบ้าง..." class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:outline-none focus:border-orange-500 mb-3"></textarea>
+
+                  <div class="text-right">
+                    <button type="submit" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold shadow-sm transition">
+                      ส่งรีวิว
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Reviews Feed -->
+                <div class="space-y-3">
+                  ${reviews.map(r => `
+                    <div class="p-4 rounded-2xl bg-[#FCFAF7] border border-slate-100 text-xs">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-slate-800">${r.author}</span>
+                        <span class="text-slate-400">${r.date}</span>
+                      </div>
+                      <div class="flex items-center gap-1 text-amber-400 mb-1.5">
+                        ${Array(r.score).fill(0).map(() => '<i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>').join('')}
+                      </div>
+                      <p class="text-slate-600 leading-relaxed">${r.comment}</p>
+                    </div>
+                  `).join('')}
+
+                  <div class="p-4 rounded-2xl bg-[#FCFAF7] border border-slate-100 text-xs">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-bold text-slate-800">นักเดินทางสายกิน</span>
+                      <span class="text-slate-400">เมื่อวานนี้</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-amber-400 mb-1.5">
+                      ${Array(5).fill(0).map(() => '<i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>').join('')}
+                    </div>
+                    <p class="text-slate-600 leading-relaxed">รสชาติเด็ดจริงสมคำร่ำลือ มานางรองต้องแวะชิมครับ วัตถุดิบสดใหม่ ให้เยอะ คุ้มราคามาก</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Right Column (4 cols): Location, Map, Working Hours, Facilities -->
+            <div class="lg:col-span-4 space-y-6">
+              
+              <!-- Location & Mini Map Box -->
+              <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <h4 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2 font-heading">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-rose-500"></i>
+                  ตำแหน่งที่ตั้ง & แผนที่
+                </h4>
+                <p class="text-xs text-slate-600 mb-4 leading-relaxed">${place.address}</p>
+
+                <!-- Dedicated Leaflet Map -->
+                <div class="rounded-2xl overflow-hidden border border-slate-200 h-52 relative mb-4">
+                  <div id="detail-restaurant-map" class="w-full h-full z-10"></div>
+                </div>
+
+                <a href="${googleMapsUrl}" target="_blank" class="w-full py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm">
+                  <i data-lucide="navigation" class="w-4 h-4"></i>
+                  <span>เปิด Google Maps นำทางจริง</span>
+                </a>
+              </div>
+
+              <!-- Working Hours & Contact -->
+              <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-xs">
+                <div>
+                  <span class="font-bold text-slate-800 block mb-1 flex items-center gap-1.5">
+                    <i data-lucide="clock" class="w-4 h-4 text-orange-600"></i>
+                    เวลาทำการ
+                  </span>
+                  <p class="text-slate-600">${place.openHours}</p>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <span class="font-bold text-slate-800 block mb-1 flex items-center gap-1.5">
+                    <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i>
+                    เบอร์ติดต่อ
+                  </span>
+                  <a href="tel:${place.phone}" class="text-slate-600 hover:text-orange-600 font-medium">${place.phone}</a>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100">
+                  <span class="font-bold text-slate-800 block mb-2">สิ่งอำนวยความสะดวก</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${place.facilities.map(f => `
+                      <span class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 font-medium">
+                        ✓ ${f}
+                      </span>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Related Restaurants in Same Category -->
+              ${related.length > 0 ? `
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                  <h4 class="text-sm font-bold text-slate-900 mb-3 font-heading">ร้านอื่นๆ ในหมวดเดียวกัน</h4>
+                  <div class="space-y-3">
+                    ${related.map(r => `
+                      <a href="restaurant-detail.html?id=${r.id}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-orange-50/60 transition group">
+                        <img src="${r.coverImage}" class="w-12 h-12 rounded-xl object-cover">
+                        <div class="flex-1 truncate">
+                          <h5 class="text-xs font-bold text-slate-800 group-hover:text-orange-600 truncate">${r.name}</h5>
+                          <p class="text-[11px] text-slate-400 mt-0.5 truncate">${r.highlight}</p>
+                        </div>
+                      </a>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      if (window.lucide) lucide.createIcons();
+
+      // Initialize Map
+      setTimeout(() => {
+        const mapContainer = document.getElementById('detail-restaurant-map');
+        if (mapContainer && window.L) {
+          const detailMap = L.map('detail-restaurant-map', { scrollWheelZoom: false }).setView([place.lat, place.lng], 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+          }).addTo(detailMap);
+
+          L.marker([place.lat, place.lng]).addTo(detailMap)
+            .bindPopup(`<b>${place.name}</b><br><small>${place.address}</small>`)
+            .openPopup();
+        }
+      }, 150);
+    }
+
+    function setDetailStar(score) {
+      document.getElementById('detail-star-value').value = score;
+      const labels = ['', '1 ดาว (ต้องปรับปรุง)', '2 ดาว (พอใช้)', '3 ดาว (ปานกลาง)', '4 ดาว (ดีมาก)', '5 ดาว (ดีเยี่ยมมาก)'];
+      document.getElementById('detail-star-label').textContent = labels[score];
+
+      document.querySelectorAll('.star-btn-detail').forEach((btn, idx) => {
+        if (idx < score) {
+          btn.classList.add('text-amber-400');
+          btn.classList.remove('text-slate-300');
+        } else {
+          btn.classList.remove('text-amber-400');
+          btn.classList.add('text-slate-300');
+        }
+      });
+    }
+
+    function handleDetailReviewSubmit(e, placeId) {
+      e.preventDefault();
+      const author = document.getElementById('detail-review-name').value.trim();
+      const comment = document.getElementById('detail-review-comment').value.trim();
+      const dish = document.getElementById('detail-review-dish')?.value.trim();
+      const score = parseInt(document.getElementById('detail-star-value').value || 5);
+
+      if (!author || !comment) return;
+
+      if (!CommonState.userReviews[placeId]) {
+        CommonState.userReviews[placeId] = [];
+      }
+
+      CommonState.userReviews[placeId].unshift({
+        author,
+        comment: dish ? `[เมนู: ${dish}] ${comment}` : comment,
+        score,
+        date: 'วันนี้'
+      });
+
+      localStorage.setItem('nangrong_reviews', JSON.stringify(CommonState.userReviews));
+      showToast('ขอบคุณสำหรับรีวิวของคุณ!', 'success');
+      renderRestaurantDetail(placeId);
+    }
+
+    function shareDetail(name, highlight) {
+      if (navigator.share) {
+        navigator.share({
+          title: `${name} - ร้านลับนางรอง`,
+          text: `แนะนำร้านเด็ดในอำเภอนางรอง: ${name} (${highlight})`,
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(`${name} - ร้านลับอำเภอนางรอง: ${highlight} ${window.location.href}`);
+        showToast('คัดลอกข้อมูลร้านและลิงก์เรียบร้อยแล้ว!', 'success');
+      }
+    }
+  </script>
+</body>
+</html>

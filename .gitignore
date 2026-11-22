@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Bundled ASUS driver installer, unrelated to the website
+/eDriver/

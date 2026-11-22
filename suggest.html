@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แนะนำร้านลับใหม่ | นางรอง ลองชิม</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#FCFAF7] text-slate-800 antialiased selection:bg-orange-500 selection:text-white flex flex-col min-h-screen">
+
+  <!-- ==========================================
+       Top Navigation Bar (Navbar)
+       ========================================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 md:w-6 md:h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg md:text-xl text-slate-900 tracking-tight font-heading">นางรอง ลองชิม</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">อ.นางรอง บุรีรัมย์</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-normal">ระบบแนะนำร้านอาหารลับ & ของอร่อยท้องถิ่น</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="nav-link hover:text-orange-600 transition">หน้าแรก</a>
+          <a href="restaurants.html" class="nav-link hover:text-orange-600 transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="nav-link hover:text-orange-600 transition">แผนที่ร้านลับ</a>
+          <a href="survey.html" class="nav-link hover:text-orange-600 transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="nav-link text-orange-600 font-bold hover:text-orange-700 transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="nav-link hover:text-orange-600 transition">ข้อมูลโครงงาน</a>
+        </nav>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <button 
+            onclick="randomizeSecretSpot()" 
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition">
+            <i data-lucide="dices" class="w-4 h-4 text-amber-600"></i>
+            <span>สุ่มร้านกินอะไรดี?</span>
+          </button>
+
+          <button 
+            onclick="openFavoritesView()" 
+            title="ดูร้านโปรดของคุณ"
+            class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-600 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="fav-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       Suggest Page Content
+       ========================================== -->
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Title -->
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold mb-3">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-600"></i>
+          <span>ส่งเสริมเศรษฐกิจชุมชนและร้านค้ารายย่อย อ.นางรอง</span>
+        </div>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-slate-900 font-heading">
+          แนะนำร้านอาหารลับในอำเภอนางรอง 💡
+        </h1>
+        <p class="text-xs md:text-sm text-slate-600 mt-2 leading-relaxed">
+          มีร้านอร่อยในซอยลึก ตรอกชุมชนเก่า หรือร้านเพิงริมทางที่คุณประทับใจแต่อยากให้คนอื่นได้รู้จักมากขึ้น? 
+          ส่งข้อมูลมาให้เราเพื่อร่วมเป็นส่วนหนึ่งในการประชาสัมพันธ์ของอร่อยเมืองนางรองครับ
+        </p>
+      </div>
+
+      <!-- Submission Form Card -->
+      <div class="bg-white p-6 sm:p-10 rounded-3xl border border-slate-200 shadow-sm mb-12">
+        <form id="page-suggest-form" class="space-y-5 text-xs">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Restaurant Name -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1.5">ชื่อร้านอาหาร *</label>
+              <input type="text" id="p-suggest-name" required placeholder="เช่น ผัดหมี่ตาเปี๊ยก, ส้มตำยายมาลัย" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs">
+            </div>
+
+            <!-- Category -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1.5">หมวดหมู่อาหาร *</label>
+              <select id="p-suggest-cat" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs">
+                <option value="pork-leg">ขาหมู & อาหารจานเดียว</option>
+                <option value="noodle">ก๋วยเตี๋ยว & เส้น</option>
+                <option value="isan" selected>อาหารอีสาน & ส้มตำ</option>
+                <option value="cafe">คาเฟ่ & ของหวาน</option>
+                <option value="night">รอบดึก & สตรีทฟู้ด</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Signature Dish -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1.5">เมนูเด็ดที่ห้ามพลาด</label>
+              <input type="text" id="p-suggest-menu" placeholder="เช่น ตำป่าหมูกรอบ, บะหมี่เกี๊ยวแห้งยำ" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs">
+            </div>
+
+            <!-- Secret Level -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1.5">ระดับความลับของร้าน</label>
+              <select id="p-suggest-level" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs">
+                <option value="ultra-secret">ร้านลับระดับตำนาน (ในตรอก/ซอยลึก)</option>
+                <option value="local-gem" selected>ร้านเด็ดคนท้องถิ่นกินประจำ</option>
+                <option value="legendary">ร้านดังคู่เมืองนางรอง</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1.5">พิกัด / จุดสังเกต หรือสถานที่ตั้งใน อ.นางรอง *</label>
+            <input type="text" id="p-suggest-loc" required placeholder="เช่น ซอยข้างวัดขุนก้อง, หลังตลาดสดเทศบาล 4, ถนนประดิษฐ์เสรี" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs">
+          </div>
+
+          <!-- Why Special / Reason -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1.5">ทำไมร้านนี้ถึงลับ/เด็ด? อะไรทำให้คุณประทับใจ?</label>
+            <textarea id="p-suggest-reason" rows="3" placeholder="เช่น น้ำซุปหอมหวานกลมกล่อมมาก, หมูย่างเตาถ่านหนังกรอบ, บรรยากาศบ้านไม้โบราณสงบเงียบ..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs leading-relaxed"></textarea>
+          </div>
+
+          <!-- Submitter Name -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1.5">ชื่อหรือนามแฝงของคุณ</label>
+            <input type="text" id="p-suggest-author" placeholder="เช่น คนนางรองโดยกำเนิด หรือ นักท่องเที่ยวสายกิน" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-[#FCFAF7] focus:bg-white focus:outline-none focus:border-orange-500 text-xs">
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-lg shadow-orange-600/25 transition">
+              ส่งข้อมูลร้านลับเพื่อการรีวิว
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Suggested Spots List (Real-time localStorage) -->
+      <div class="mb-12">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-heading">
+          <i data-lucide="list-plus" class="w-5 h-5 text-orange-600"></i>
+          ร้านลับที่สมาชิกในชุมชนเสนอเข้ามาล่าสุด
+        </h3>
+
+        <div id="suggested-places-grid" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-base font-heading">นางรอง ลองชิม (Nang Rong Secret Taste)</h3>
+            <p class="text-slate-500 text-[11px]">ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+          <a href="index.html" class="hover:text-white transition">หน้าแรก</a>
+          <a href="restaurants.html" class="hover:text-white transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="hover:text-white transition">แผนที่</a>
+          <a href="survey.html" class="hover:text-white transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="text-orange-400 font-semibold">แนะนำร้านใหม่</a>
+          <a href="about.html" class="hover:text-white transition">ข้อมูลโครงงาน</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>© 2026 โครงการพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+        <p>พัฒนาขึ้นเพื่อการศึกษาและการวิจัยชุมชน • สนับสนุนการท่องเที่ยว อ.นางรอง</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSuggestedPlaces();
+      loadSuggestedPlaces();
+
+      document.getElementById('page-suggest-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('p-suggest-name').value.trim();
+        const cat = document.getElementById('p-suggest-cat').value;
+        const menu = document.getElementById('p-suggest-menu').value.trim();
+        const level = document.getElementById('p-suggest-level').value;
+        const loc = document.getElementById('p-suggest-loc').value.trim();
+        const reason = document.getElementById('p-suggest-reason').value.trim();
+        const author = document.getElementById('p-suggest-author').value.trim() || 'สมาชิกชุมชนนางรอง';
+
+        if (!name || !loc) return;
+
+        const newItem = {
+          name,
+          category: cat,
+          menu: menu || 'เมนูแนะนำตามสั่ง',
+          level,
+          location: loc,
+          reason: reason || 'อาหารรสเด็ด เอกลักษณ์ชุมชน',
+          author
+        };
+
+        let savedItem = { ...newItem, id: Date.now(), date: new Date().toISOString().split('T')[0] };
+        if (window.nangrongSupabase) {
+          const { data, error } = await window.nangrongSupabase
+            .from('suggested_places')
+            .insert({ ...newItem, menu: newItem.menu, reason: newItem.reason })
+            .select('id, name, category, menu, level, location, reason, author, created_at')
+            .single();
+          if (error) {
+            console.error('Could not save suggestion to Supabase:', error.message);
+            showToast('บันทึกขึ้นระบบไม่ได้ ข้อมูลยังเก็บไว้ในเครื่องนี้', 'warning');
+          } else {
+            savedItem = mapSuggestedPlace(data);
+          }
+        }
+
+        CommonState.suggestedPlaces.unshift(savedItem);
+        localStorage.setItem('nangrong_suggested', JSON.stringify(CommonState.suggestedPlaces));
+
+        e.target.reset();
+        if (!window.nangrongSupabase) showToast('บันทึกในเครื่องนี้แล้ว แต่ยังไม่ได้เชื่อมต่อ Supabase', 'warning');
+        else showToast('ส่งข้อมูลร้านอาหารลับเรียบร้อยแล้ว! ขอบคุณที่ช่วยแนะนำครับ', 'success');
+        renderSuggestedPlaces();
+      });
+    });
+
+    async function loadSuggestedPlaces() {
+      if (!window.nangrongSupabase) return;
+      const { data, error } = await window.nangrongSupabase
+        .from('suggested_places')
+        .select('id, name, category, menu, level, location, reason, author, created_at')
+        .order('created_at', { ascending: false });
+      if (error) {
+        console.error('Could not load suggestions from Supabase:', error.message);
+        return;
+      }
+      CommonState.suggestedPlaces = data.map(mapSuggestedPlace);
+      localStorage.setItem('nangrong_suggested', JSON.stringify(CommonState.suggestedPlaces));
+      renderSuggestedPlaces();
+    }
+
+    function mapSuggestedPlace(item) {
+      return { ...item, date: (item.created_at || new Date().toISOString()).slice(0, 10) };
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+    }
+
+    function renderSuggestedPlaces() {
+      const container = document.getElementById('suggested-places-grid');
+      if (!container) return;
+
+      const list = CommonState.suggestedPlaces;
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 rounded-2xl bg-white border border-slate-100 text-center text-slate-400 text-xs">
+            <i data-lucide="utensils" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
+            ยังไม่มีร้านที่เสนอเข้ามา เป็นคนแรกที่แนะนำร้านลับในดวงใจของคุณเลย!
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="p-5 rounded-2xl bg-white border border-slate-100 shadow-2xs text-xs space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-slate-900">${escapeHTML(item.name)}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-orange-50 text-orange-600 font-medium">
+                ${CATEGORIES.find(c => c.id === item.category)?.name || 'ทั่วไป'}
+              </span>
+            </div>
+            <span class="text-[11px] text-slate-400">${item.date}</span>
+          </div>
+
+          <p class="text-slate-600"><strong class="text-slate-700">พิกัด/ที่ตั้ง:</strong> ${escapeHTML(item.location)}</p>
+          <p class="text-slate-600"><strong class="text-slate-700">เมนูเด็ด:</strong> ${escapeHTML(item.menu)}</p>
+          ${item.reason ? `<p class="text-slate-500 italic bg-[#FCFAF7] p-2.5 rounded-xl border border-slate-100">"${escapeHTML(item.reason)}"</p>` : ''}
+          
+          <div class="pt-1 text-[11px] text-slate-400 flex justify-between items-center">
+            <span>แนะนำโดย: ${escapeHTML(item.author)}</span>
+            <span class="text-emerald-600 font-semibold">● ส่งข้อมูลแล้ว</span>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

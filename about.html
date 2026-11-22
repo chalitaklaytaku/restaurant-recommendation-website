@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข้อมูลโครงงานวิจัย (บทที่ 1) | นางรอง ลองชิม</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              500: '#F97316',
+              600: '#EA580C',
+              700: '#C2410C',
+              800: '#9A3412',
+              900: '#7C2D12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#FCFAF7] text-slate-800 antialiased selection:bg-orange-500 selection:text-white flex flex-col min-h-screen">
+
+  <!-- ==========================================
+       Top Navigation Bar (Navbar)
+       ========================================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 md:w-6 md:h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg md:text-xl text-slate-900 tracking-tight font-heading">นางรอง ลองชิม</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">อ.นางรอง บุรีรัมย์</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-normal">ระบบแนะนำร้านอาหารลับ & ของอร่อยท้องถิ่น</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <a href="index.html" class="nav-link hover:text-orange-600 transition">หน้าแรก</a>
+          <a href="restaurants.html" class="nav-link hover:text-orange-600 transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="nav-link hover:text-orange-600 transition">แผนที่ร้านลับ</a>
+          <a href="survey.html" class="nav-link hover:text-orange-600 transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="nav-link hover:text-orange-600 transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="nav-link text-orange-600 font-bold hover:text-orange-700 transition">ข้อมูลโครงงาน</a>
+        </nav>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2.5">
+          <button 
+            onclick="randomizeSecretSpot()" 
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition">
+            <i data-lucide="dices" class="w-4 h-4 text-amber-600"></i>
+            <span>สุ่มร้านกินอะไรดี?</span>
+          </button>
+
+          <button 
+            onclick="openFavoritesView()" 
+            title="ดูร้านโปรดของคุณ"
+            class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-600 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="fav-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       About & Thesis Documentation Content
+       ========================================== -->
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Academic Document Header -->
+      <div class="text-center mb-10">
+        <span class="text-xs font-bold uppercase tracking-wider text-orange-600 bg-orange-100/80 px-3 py-1 rounded-full">
+          Senior Project Documentation • บทที่ 1 บทนำ
+        </span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3 font-heading leading-tight">
+          ระบบเว็บไซต์แนะนำร้านอาหารลับ<br>ในอำเภอนางรอง จังหวัดบุรีรัมย์
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-2 font-light">
+          เอกสารโครงร่างและข้อมูลทางวิชาการตามกรอบการวิจัยของโครงการ
+        </p>
+      </div>
+
+      <div class="space-y-8 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        
+        <!-- Section 1: Background -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-3 flex items-center gap-2 font-heading text-orange-600">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+            1. ความเป็นมาและความสำคัญของโครงการ
+          </h2>
+          <div class="space-y-3 text-slate-600">
+            <p>
+              ปัจจุบันเทคโนโลยีสารสนเทศและอินเทอร์เน็ตมีบทบาทสำคัญต่อการดำเนินชีวิตของผู้คน โดยเฉพาะการค้นหาข้อมูลและการประชาสัมพันธ์ผ่านเว็บไซต์ ซึ่งช่วยให้ผู้ใช้งานสามารถเข้าถึงข้อมูลได้อย่างสะดวก รวดเร็ว และมีประสิทธิภาพ การพัฒนาเว็บไซต์จึงเป็นแนวทางหนึ่งที่ช่วยรวบรวมข้อมูลและนำเสนอข้อมูลให้เป็นระบบ สามารถเผยแพร่ข้อมูลได้อย่างทั่วถึง และช่วยเพิ่มช่องทางในการประชาสัมพันธ์สินค้าและบริการให้เป็นที่รู้จักมากยิ่งขึ้น โดยเฉพาะธุรกิจร้านอาหารที่สามารถใช้เว็บไซต์เป็นเครื่องมือในการนำเสนอข้อมูลร้าน เมนูอาหาร ราคา และสถานที่ตั้งให้แก่ผู้บริโภค
+            </p>
+            <p>
+              อำเภอนางรอง จังหวัดบุรีรัมย์ เป็นพื้นที่ที่มีร้านอาหารหลากหลายประเภท ทั้งร้านอาหารท้องถิ่น ร้านอาหารพื้นบ้าน ร้านอาหารตามสั่ง ร้านกาแฟ และร้านอาหารที่มีเอกลักษณ์เฉพาะตัว รวมถึงร้านอาหารขนาดเล็กที่ยังไม่เป็นที่รู้จักอย่างแพร่หลาย ซึ่งร้านอาหารเหล่านี้บางแห่งยังขาดช่องทางการประชาสัมพันธ์ที่ครอบคลุม ทำให้ประชาชนและนักท่องเที่ยวไม่สามารถเข้าถึงข้อมูลร้านอาหารได้อย่างสะดวก อีกทั้งข้อมูลเกี่ยวกับร้านอาหารยังมีการกระจายอยู่ตามช่องทางต่าง ๆ เช่น Facebook, TikTok และ Google Maps ส่งผลให้ผู้ที่ต้องการค้นหาร้านอาหารต้องใช้เวลาในการค้นหาข้อมูลจากหลายแหล่ง และอาจได้รับข้อมูลที่ไม่ครบถ้วนเกี่ยวกับรายละเอียดร้าน เมนูอาหาร ราคา เวลาเปิด-ปิด และตำแหน่งที่ตั้ง
+            </p>
+            <p>
+              ดังนั้น ผู้จัดทำจึงมีแนวคิดในการพัฒนา <strong>ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</strong> เพื่อรวบรวมข้อมูลร้านอาหารที่น่าสนใจและยังไม่เป็นที่รู้จักอย่างแพร่หลายให้อยู่ในเว็บไซต์เดียว โดยนำเสนอข้อมูลร้านอาหาร รูปภาพ เมนูอาหาร รายละเอียดร้าน และตำแหน่งที่ตั้ง พร้อมทั้งออกแบบเว็บไซต์ให้มีรูปแบบที่สวยงาม ใช้งานง่าย และสามารถค้นหาข้อมูลได้อย่างสะดวกและรวดเร็ว การพัฒนาเว็บไซต์ดังกล่าวจะช่วยเพิ่มช่องทางการประชาสัมพันธ์ให้แก่ร้านอาหารท้องถิ่น ส่งเสริมให้ร้านอาหารรายย่อยเป็นที่รู้จักมากยิ่งขึ้น ช่วยสนับสนุนเศรษฐกิจภายในชุมชน และอำนวยความสะดวกให้ประชาชนและนักท่องเที่ยวสามารถค้นพบร้านอาหารที่น่าสนใจในอำเภอนางรองได้ง่ายขึ้น
+            </p>
+          </div>
+        </div>
+
+        <!-- Section 2: Objectives -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-heading text-orange-600">
+            <i data-lucide="target" class="w-5 h-5"></i>
+            2. วัตถุประสงค์ของโครงการ
+          </h2>
+          <div class="grid grid-cols-1 gap-3">
+            <div class="p-4 rounded-2xl bg-[#FCFAF7] border border-orange-100 flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <p>เพื่อพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-[#FCFAF7] border border-orange-100 flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+              <p>เพื่อรวบรวมและนำเสนอข้อมูลร้านอาหารที่น่าสนใจภายในอำเภอนางรอง จังหวัดบุรีรัมย์ ให้ผู้ใช้งานสามารถค้นหาข้อมูลได้อย่างสะดวกและรวดเร็ว</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-[#FCFAF7] border border-orange-100 flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+              <p>เพื่อประเมินความพึงพอใจของผู้ใช้งานที่มีต่อระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Hypothesis -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-3 flex items-center gap-2 font-heading text-orange-600">
+            <i data-lucide="compass" class="w-5 h-5"></i>
+            3. สมมติฐานการวิจัย
+          </h2>
+          <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 text-amber-900">
+            <p class="font-medium">
+              "ความพึงพอใจของผู้ใช้งานที่มีต่อระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์ อยู่ในระดับ <strong>มากที่สุด (x̄ ≥ 4.50)</strong>"
+            </p>
+          </div>
+        </div>
+
+        <!-- Section 4: Scope -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-heading text-orange-600">
+            <i data-lucide="check-square" class="w-5 h-5"></i>
+            4. ขอบเขตของโครงการ
+          </h2>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-1"></i>
+              <span><strong>4.1 ด้านการนำเสนอข้อมูล:</strong> เว็บไซต์สามารถนำเสนอข้อมูลร้านอาหารลับและร้านอาหารที่น่าสนใจในอำเภอนางรอง จังหวัดบุรีรัมย์ โดยแสดงชื่อร้าน รูปภาพ รายละเอียดร้าน และเมนูอาหารพร้อมราคา</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-1"></i>
+              <span><strong>4.2 ด้านการระบุพิกัดและแผนที่:</strong> เว็บไซต์สามารถแสดงข้อมูลสถานที่ตั้งของร้านอาหาร ปักหมุดพิกัด GPS ผ่านแผนที่ดิจิทัล เพื่อช่วยให้ผู้ใช้งานสามารถค้นหาและเดินทางไปยังร้านอาหารได้สะดวก</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-1"></i>
+              <span><strong>4.3 ด้านระบบสืบค้นและตัวกรอง:</strong> เว็บไซต์มีระบบค้นหาร้านอาหารตามชื่อร้าน เมนู ประเภทอาหาร และช่วงราคา เพื่อให้ผู้ใช้งานค้นหาร้านอาหารที่ต้องการได้อย่างรวดเร็ว</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-1"></i>
+              <span><strong>4.4 ด้านการออกแบบหน้าจอ (UI/UX):</strong> เว็บไซต์มีการออกแบบหน้าจอให้สวยงาม ทันสมัย ใช้งานง่าย และรองรับ Responsive Design สามารถใช้งานได้ทั้งบนคอมพิวเตอร์และโทรศัพท์มือถือ</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 5: Benefits -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-heading text-orange-600">
+            <i data-lucide="gift" class="w-5 h-5"></i>
+            5. ประโยชน์ที่คาดว่าจะได้รับ
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-3.5 rounded-2xl bg-[#FCFAF7] border border-slate-100">
+              <span class="font-bold text-slate-800 block mb-1">5.1 ได้ระบบเว็บไซต์ที่ใช้งานได้จริง</span>
+              <p class="text-slate-500 text-xs">ได้ระบบแนะนำร้านอาหารลับในอำเภอนางรองที่สมบูรณ์และเปิดใช้งานได้จริง</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#FCFAF7] border border-slate-100">
+              <span class="font-bold text-slate-800 block mb-1">5.2 ทราบระดับความพึงพอใจ</span>
+              <p class="text-slate-500 text-xs">ได้ทราบผลการประเมินความพึงพอใจของผู้ใช้งานทั้งเชิงปริมาณและคุณภาพ</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#FCFAF7] border border-slate-100">
+              <span class="font-bold text-slate-800 block mb-1">5.3 เพิ่มช่องทางประชาสัมพันธ์</span>
+              <p class="text-slate-500 text-xs">ช่วยเพิ่มช่องทางในการเผยแพร่ข้อมูลร้านอาหารท้องถิ่นในอำเภอนางรองให้เป็นที่รู้จัก</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#FCFAF7] border border-slate-100">
+              <span class="font-bold text-slate-800 block mb-1">5.4 อำนวยความสะดวกแก่นักท่องเที่ยว</span>
+              <p class="text-slate-500 text-xs">ช่วยให้ประชาชนและนักท่องเที่ยวค้นหาร้านอาหารและเดินทางไปตามพิกัดได้ง่ายขึ้น</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#FCFAF7] border border-slate-100 sm:col-span-2">
+              <span class="font-bold text-slate-800 block mb-1">5.5 ส่งเสริมเศรษฐกิจชุมชน</span>
+              <p class="text-slate-500 text-xs">ช่วยส่งเสริมและกระจายรายได้สู่ผู้ประกอบการร้านอาหารรายย่อยในเขตอำเภอนางรอง</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 6: Specific Terms -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-heading text-orange-600">
+            <i data-lucide="book-marked" class="w-5 h-5"></i>
+            6. นิยามศัพท์เฉพาะ
+          </h2>
+          <div class="space-y-3">
+            <div>
+              <h4 class="font-bold text-slate-900">6.1 เว็บไซต์ (Website)</h4>
+              <p class="text-slate-600 text-xs mt-0.5">สื่อออนไลน์ที่พัฒนาขึ้นเพื่อรวบรวมและนำเสนอข้อมูลร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์ ให้ผู้ใช้งานสามารถเข้าถึงข้อมูลได้ผ่านอินเทอร์เน็ต</p>
+            </div>
+            <div class="pt-2 border-t border-slate-100">
+              <h4 class="font-bold text-slate-900">6.2 ร้านอาหารลับ</h4>
+              <p class="text-slate-600 text-xs mt-0.5">ร้านอาหารในอำเภอนางรอง จังหวัดบุรีรัมย์ ที่มีความน่าสนใจ มีเอกลักษณ์ หรือมีอาหารที่น่าสนใจ แต่ยังไม่เป็นที่รู้จักอย่างแพร่หลาย หรือตั้งอยู่ในซอยลึก</p>
+            </div>
+            <div class="pt-2 border-t border-slate-100">
+              <h4 class="font-bold text-slate-900">6.3 ระบบเว็บไซต์แนะนำร้านอาหาร</h4>
+              <p class="text-slate-600 text-xs mt-0.5">เว็บไซต์ที่พัฒนาขึ้นเพื่อรวบรวมข้อมูลร้านอาหาร รูปภาพ เมนูอาหาร รายละเอียดร้าน และตำแหน่งที่ตั้ง เพื่อช่วยให้ผู้ใช้งานสามารถค้นหาและเลือกร้านอาหารได้อย่างสะดวก</p>
+            </div>
+            <div class="pt-2 border-t border-slate-100">
+              <h4 class="font-bold text-slate-900">6.4 ความพึงพอใจของผู้ใช้งาน</h4>
+              <p class="text-slate-600 text-xs mt-0.5">ความรู้สึกหรือความคิดเห็นของผู้ใช้งานที่มีต่อระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์ ซึ่งประเมินจากแบบสอบถามความพึงพอใจ 5 ระดับ (Likert Scale)</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-base font-heading">นางรอง ลองชิม (Nang Rong Secret Taste)</h3>
+            <p class="text-slate-500 text-[11px]">ระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+          <a href="index.html" class="hover:text-white transition">หน้าแรก</a>
+          <a href="restaurants.html" class="hover:text-white transition">สำรวจร้านอาหาร</a>
+          <a href="map.html" class="hover:text-white transition">แผนที่</a>
+          <a href="survey.html" class="hover:text-white transition">แบบประเมินวิจัย</a>
+          <a href="suggest.html" class="hover:text-white transition">แนะนำร้านใหม่</a>
+          <a href="about.html" class="text-orange-400 font-semibold">ข้อมูลโครงงาน</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>© 2026 โครงการพัฒนาระบบเว็บไซต์แนะนำร้านอาหารลับในอำเภอนางรอง จังหวัดบุรีรัมย์</p>
+        <p>พัฒนาขึ้นเพื่อการศึกษาและการวิจัยชุมชน • สนับสนุนการท่องเที่ยว อ.นางรอง</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+</body>
+</html>
