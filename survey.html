@@ -324,10 +324,12 @@
   <script src="js/common.js"></script>
   <script>
     let surveyChartInstance = null;
+    let surveyAggregateStats = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       renderSurveyQuestions();
       updateDashboardStats();
+      loadSurveyAggregateStats();
 
       document.getElementById('standalone-survey-form')?.addEventListener('submit', handleSurveySubmit);
     });
@@ -362,6 +364,24 @@
     }
 
     function calculateStats() {
+      if (surveyAggregateStats) {
+        const sampleSize = Math.min(...Object.values(surveyAggregateStats).map(item => item.response_count));
+        if (sampleSize > 0) {
+          const questionStats = {};
+          Object.entries(surveyAggregateStats).forEach(([questionKey, item]) => {
+            const mean = item.score_sum / item.response_count;
+            const squaredDeviationSum = Math.max(0, item.score_squared_sum - (item.score_sum ** 2 / item.response_count));
+            const variance = squaredDeviationSum / (item.response_count > 1 ? item.response_count - 1 : 1);
+            questionStats[questionKey] = {
+              mean: Number(mean.toFixed(2)),
+              sd: Number(Math.sqrt(variance).toFixed(2)),
+              interpretation: getLikertInterpretation(mean)
+            };
+          });
+          return assembleSurveyStats(questionStats, sampleSize);
+        }
+      }
+
       const responses = CommonState.surveys;
       const n = responses.length;
       if (n === 0) return null;
@@ -383,6 +403,10 @@
         };
       });
 
+      return assembleSurveyStats(questionStats, n);
+    }
+
+    function assembleSurveyStats(questionStats, n) {
       const categoryStats = [
         { name: '1. การออกแบบหน้าจอ (UI)', mean: Number(((questionStats.q1.mean + questionStats.q2.mean) / 2).toFixed(2)) },
         { name: '2. ความสะดวกในการใช้งาน', mean: Number(((questionStats.q3.mean + questionStats.q4.mean) / 2).toFixed(2)) },
@@ -403,6 +427,24 @@
         overallSd,
         overallInterpretation: getLikertInterpretation(overallMean)
       };
+    }
+
+    async function loadSurveyAggregateStats() {
+      if (!window.nangrongSupabase) return;
+      const { data, error } = await window.nangrongSupabase
+        .from('survey_statistics')
+        .select('question_key, response_count, score_sum, score_squared_sum');
+      if (error) {
+        console.error('Could not load survey aggregates from Supabase:', error.message);
+        return;
+      }
+
+      const stats = Object.fromEntries(data.map(item => [item.question_key, item]));
+      const questionKeys = Array.from({ length: 10 }, (_, index) => `q${index + 1}`);
+      if (questionKeys.every(questionKey => stats[questionKey])) {
+        surveyAggregateStats = stats;
+        updateDashboardStats();
+      }
     }
 
     function getLikertInterpretation(score) {
@@ -538,6 +580,7 @@
         });
         cloudSaved = !error;
         if (error) console.error('Could not save survey to Supabase:', error.message);
+        if (cloudSaved) await loadSurveyAggregateStats();
       }
 
       form.reset();

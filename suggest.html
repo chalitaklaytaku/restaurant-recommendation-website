@@ -264,18 +264,15 @@
           author
         };
 
-        let savedItem = { ...newItem, id: Date.now(), date: new Date().toISOString().split('T')[0] };
+        const savedItem = { ...newItem, id: Date.now(), date: new Date().toISOString().split('T')[0] };
+        let cloudSaved = false;
         if (window.nangrongSupabase) {
-          const { data, error } = await window.nangrongSupabase
+          const { error } = await window.nangrongSupabase
             .from('suggested_places')
-            .insert({ ...newItem, menu: newItem.menu, reason: newItem.reason })
-            .select('id, name, category, menu, level, location, reason, author, created_at')
-            .single();
+            .insert(newItem);
+          cloudSaved = !error;
           if (error) {
             console.error('Could not save suggestion to Supabase:', error.message);
-            showToast('บันทึกขึ้นระบบไม่ได้ ข้อมูลยังเก็บไว้ในเครื่องนี้', 'warning');
-          } else {
-            savedItem = mapSuggestedPlace(data);
           }
         }
 
@@ -283,8 +280,8 @@
         localStorage.setItem('nangrong_suggested', JSON.stringify(CommonState.suggestedPlaces));
 
         e.target.reset();
-        if (!window.nangrongSupabase) showToast('บันทึกในเครื่องนี้แล้ว แต่ยังไม่ได้เชื่อมต่อ Supabase', 'warning');
-        else showToast('ส่งข้อมูลร้านอาหารลับเรียบร้อยแล้ว! ขอบคุณที่ช่วยแนะนำครับ', 'success');
+        if (cloudSaved) showToast('ส่งข้อมูลร้านอาหารลับเรียบร้อยแล้ว! ขอบคุณที่ช่วยแนะนำครับ', 'success');
+        else showToast('บันทึกในเครื่องนี้แล้ว แต่ยังไม่ได้บันทึกเข้า Supabase', 'warning');
         renderSuggestedPlaces();
       });
     });
