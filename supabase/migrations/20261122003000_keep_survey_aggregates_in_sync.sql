@@ -45,4 +45,3 @@ drop trigger if exists update_survey_statistics_after_delete on public.survey_re
 create trigger update_survey_statistics_after_delete
   after delete on public.survey_responses
   for each row execute function private.update_survey_statistics();
-
